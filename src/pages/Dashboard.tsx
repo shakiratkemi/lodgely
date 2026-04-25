@@ -1,4 +1,3 @@
-import React from "react";
 import {
   LayoutDashboard,
   Home,
@@ -46,7 +45,6 @@ const Dashboard = () => {
           </div>
         </div>
       </aside>
-
 
       <main className="flex-1 lg:ml-64">
         {/* TOP NAVIGATION */}

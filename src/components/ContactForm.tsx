@@ -59,9 +59,8 @@ const ContactForm: React.FC = () => {
         </p>
       </div>
 
-      <div className="w-full max-w-2xl bg-white p-8 md:p-12 rounded-[2rem] shadow-sm border border-slate-100">
+      <div className="w-full max-w-2xl bg-white p-8 md:p-12 rounded-4xl shadow-sm border border-slate-100">
         <form onSubmit={handleSubmit} noValidate className="space-y-6">
-         
           <div className="flex flex-col">
             <label
               htmlFor="name"
@@ -107,7 +106,6 @@ const ContactForm: React.FC = () => {
               </span>
             )}
           </div>
-
 
           <div className="flex flex-col">
             <label

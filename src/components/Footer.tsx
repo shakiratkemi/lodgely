@@ -1,4 +1,3 @@
-import React from "react";
 import { Building } from "lucide-react";
 import { FaGithub, FaInstagram, FaTwitter } from "react-icons/fa";
 

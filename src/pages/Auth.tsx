@@ -1,22 +1,12 @@
 import { useState } from "react";
 import { createUser, loginUser } from "../services/auth.service";
-import {
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  ArrowRight,
-  PhoneCall,
-  Phone,
-  PersonStanding,
-} from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Phone } from "lucide-react";
 import { Link, useNavigate } from "react-router";
-import { FaChrome, FaGithub } from "react-icons/fa";
 
 const AuthPage = ({ type }: { type: "login" | "signup" }) => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [role, setRole] = useState("");
+  // const [role, setRole] = useState("");
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -68,7 +58,7 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
         setTimeout(() => navigate("/dashboard"), 1000);
       }
     } catch (err: any) {
-      setError(err.message);
+      setError(err?.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -129,6 +119,17 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
           </div>
 
           <form className="space-y-5" onSubmit={handleSubmit}>
+            {error && (
+              <div className="text-red-500 text-sm font-medium bg-red-50 p-3 rounded-lg">
+                {error}
+              </div>
+            )}
+
+            {success && (
+              <div className="text-green-600 text-sm font-medium bg-green-50 p-3 rounded-lg">
+                {success}
+              </div>
+            )}
             {type === "signup" && (
               <div className="grid grid-cols-2 gap-10">
                 <div>
@@ -260,13 +261,23 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
 
             <button
               type="submit"
-              className="w-full bg-brand-dark text-white py-4 rounded-xl font-bold hover:bg-brand-primary hover:shadow-xl hover:shadow-brand-primary/20 transition-all flex items-center justify-center gap-2 group mt-8"
+              disabled={loading}
+              className="w-full bg-brand-dark text-white py-4 rounded-xl font-bold 
+  hover:bg-brand-primary hover:shadow-xl hover:shadow-brand-primary/20 
+  transition-all flex items-center justify-center gap-2 group mt-8 
+  disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              {type === "login" ? "Sign In" : "Create Account"}
-              <ArrowRight
-                size={18}
-                className="group-hover:translate-x-1 transition-transform"
-              />
+              {loading ? (
+                "Processing..."
+              ) : (
+                <>
+                  {type === "login" ? "Sign In" : "Create Account"}
+                  <ArrowRight
+                    size={18}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
+                </>
+              )}
             </button>
           </form>
 
