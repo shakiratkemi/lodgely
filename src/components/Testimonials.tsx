@@ -8,7 +8,7 @@ const testimonials = [
     message:
       "The platform transformed how I handle my properties in Lekki. Everything is organized, and rent collection is finally stress-free.",
     color: "pink",
-    image: "/src/assets/headshot2.jpg",
+    image: "/assets/headshot2.jpg",
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ const testimonials = [
     message:
       "As a tenant, I love the automated reminders. No more forgotten due dates or physical receipts.",
     color: "blue",
-    image: "/src/assets/headshot3.jpg",
+    image: "/assets/headshot3.jpg",
   },
   {
     id: 3,
@@ -26,7 +26,7 @@ const testimonials = [
     message:
       "Tracking my portfolio across multiple estates is now seamless and accurate.",
     color: "pink",
-    image: "/src/assets/headshot1.jpg",
+    image: "/assets/headshot1.jpg",
   },
 ];
 

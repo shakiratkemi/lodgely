@@ -99,7 +99,7 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
         </div>
 
         <img
-          src="/src/assets/apartment-2.jpg"
+          src="/assets/apartment-2.jpg"
           alt="Modern Architecture"
           className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay"
         />

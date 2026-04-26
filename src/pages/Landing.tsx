@@ -22,7 +22,7 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <header className="bg-[url('/src/assets/lodgely.png')] h-160 bg-cover bg-center flex items-center px-8">
+      <header className="bg-[url('/assets/lodgely.png')] h-160 bg-cover bg-center flex items-center px-8">
         <div className="  max-w-100 bg-brand-dark/20 glass-effect p-12 rounded-4xl border border-white/20 shadow-2xl ">
           <h1 className="text-4xl md:text-5xl font-extrabold text-brand-white leading-tight">
             Manage Properties, Tenants & Rent –
@@ -366,7 +366,7 @@ const LandingPage = () => {
         </div>
         <div className="flex-1 w-full h-80 flex items-center justify-center">
           <img
-            src="/src/assets/apartment-4.jpg"
+            src="/assets/apartment-4.jpg"
             alt="Modern Duplex"
             className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
           />

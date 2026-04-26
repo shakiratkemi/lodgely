@@ -13,7 +13,7 @@ export const propertiesData: Property[] = [
     category: "Full House",
     description:
       "A sprawling executive home featuring smart automation and premium finishes.",
-    images: ["/src/assets/apartment-1.jpg", "/src/assets/lekki.jpg"],
+    images: ["/assets/apartment-1.jpg", "/assets/lekki.jpg"],
     amenities: ["Pool", "Gym", "24/7 Power"],
     status: "Available",
   },
@@ -28,7 +28,7 @@ export const propertiesData: Property[] = [
     type: "Executive",
     category: "Shortlet",
     description: "Luxury short-stay apartment with breathtaking ocean views.",
-    images: ["/src/assets/apartment-2.jpg", "/src/assets/apartment-4.jpg"],
+    images: ["/assets/apartment-2.jpg", "/assets/apartment-4.jpg"],
     amenities: ["WiFi", "Netflix", "Ocean View"],
     status: "Occupied",
   },
@@ -44,7 +44,7 @@ export const propertiesData: Property[] = [
     category: "Commercial",
     description:
       "Open-plan office space in the most prestigious district of Lagos.",
-    images: ["/src/assets/apartment-3.jpg", "/src/assets/vi.jpg"],
+    images: ["/assets/apartment-3.jpg", "/assets/vi.jpg"],
     status: "Available",
   },
   {
@@ -58,7 +58,7 @@ export const propertiesData: Property[] = [
     type: "Premium",
     category: "Commercial",
     description: "Prime office space in a high-rise building.",
-    images: ["/src/assets/lodgely7.avif", "/src/assets/vi.jpg"],
+    images: ["/assets/lodgely7.avif", "/assets/vi.jpg"],
     status: "Occupied",
   },
   {
@@ -72,7 +72,7 @@ export const propertiesData: Property[] = [
     type: "Standard",
     category: "Apartment",
     description: "Spacious apartment in a central residential area.",
-    images: ["/src/assets/apartment.jpg", "/src/assets/duplex.jpg"],
+    images: ["/assets/apartment.jpg", "/assets/duplex.jpg"],
     status: "Available",
   },
   {
@@ -87,7 +87,7 @@ export const propertiesData: Property[] = [
     category: "Full House",
     description:
       "Located in the most secure zone of the FCT, perfect for diplomats and top executives.",
-    images: ["/src/assets/lodgely.png", "/src/assets/duplex.jpg"],
+    images: ["/assets/lodgely.png", "/assets/duplex.jpg"],
     status: "Occupied",
   },
   {
@@ -102,7 +102,7 @@ export const propertiesData: Property[] = [
     category: "Commercial",
     description:
       "Modern open-plan office with high-speed fiber internet and central cooling.",
-    images: ["/src/assets/shop.png"],
+    images: ["/assets/shop.png"],
     status: "Available",
   },
   {
@@ -117,7 +117,7 @@ export const propertiesData: Property[] = [
     category: "Apartment",
     description:
       "Spacious 3-bedroom flat in the largest residential estate in West Africa.",
-    images: ["/src/assets/lodgely3.png"],
+    images: ["/assets/lodgely3.png"],
     status: "Occupied",
   },
 
@@ -133,7 +133,7 @@ export const propertiesData: Property[] = [
     category: "Full House",
     description:
       "Elegant mansion with high-security features in PH's most prestigious neighborhood.",
-    images: ["/src/assets/apartment-5.jpg"],
+    images: ["/assets/apartment-5.jpg"],
     status: "Available",
   },
   {
@@ -148,7 +148,7 @@ export const propertiesData: Property[] = [
     category: "Shortlet",
     description:
       "Tailored for business travelers in the industrial hub of the Niger Delta.",
-    images: ["/src/assets/lodgely2.png"],
+    images: ["/assets/lodgely2.png"],
     status: "Occupied",
   },
 
@@ -164,7 +164,7 @@ export const propertiesData: Property[] = [
     category: "Commercial",
     description:
       "Large retail space perfect for a showroom or corporate headquarters.",
-    images: ["/src/assets/shop1.png"],
+    images: ["/assets/shop1.png"],
     status: "Available",
   },
   {
@@ -179,7 +179,7 @@ export const propertiesData: Property[] = [
     category: "Full House",
     description:
       "A blend of Northern architectural aesthetics with modern interior design.",
-    images: ["/src/assets/apartment.jpg"],
+    images: ["/assets/apartment.jpg"],
     status: "Occupied",
   },
 
@@ -195,7 +195,7 @@ export const propertiesData: Property[] = [
     category: "Apartment",
     description:
       "Compact and modern studio apartment close to the University of Ilorin.",
-    images: ["/src/assets/lodgely5.png"],
+    images: ["/assets/lodgely5.png"],
     status: "Available",
   },
   {
@@ -209,7 +209,7 @@ export const propertiesData: Property[] = [
     type: "Standard",
     category: "Full House",
     description: "Peaceful family home in a well-maintained gated community.",
-    images: ["/src/assets/lodgely6.png"],
+    images: ["/assets/lodgely6.png"],
     status: "Occupied",
   },
 
@@ -225,7 +225,7 @@ export const propertiesData: Property[] = [
     category: "Apartment",
     description:
       "Upscale living in the heart of Ibadan's classic elite neighborhood.",
-    images: ["/src/assets/apartment-4.jpg"],
+    images: ["/assets/apartment-4.jpg"],
     status: "Available",
   },
   {
@@ -240,7 +240,7 @@ export const propertiesData: Property[] = [
     category: "Full House",
     description:
       "High-elevation property with a scenic view of the city landscape.",
-    images: ["/src/assets/lodgely4.png"],
+    images: ["/assets/lodgely4.png"],
     status: "Occupied",
   },
 ];

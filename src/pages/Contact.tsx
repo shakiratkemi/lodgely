@@ -5,10 +5,10 @@ import { FaInstagram, FaTwitter } from "react-icons/fa";
 const Contact = () => {
   return (
     <div className="min-h-screen bg-white font-body">
-      <section className="relative h-112.5 flex items-center justify-center text-center px-8 bg-[url('/src/assets/duplex.jpg')] bg-cover bg-center">
+      <section className="relative h-112.5 flex items-center justify-center text-center px-8 bg-[url('/assets/duplex.jpg')] bg-cover bg-center">
         <div className="absolute inset-0 bg-brand-dark/75 z-0">
           <img
-            src="/src/assets/apartment-2.jpg"
+            src="/assets/apartment-2.jpg"
             alt="Modern Duplex"
             className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
           />{" "}

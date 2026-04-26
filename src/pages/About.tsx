@@ -25,7 +25,7 @@ const About = () => {
         </div>
         <div className="w-4xl">
           <img
-            src="/src/assets/lodgely3.png"
+            src="/assets/lodgely3.png"
             alt="Modern Duplex"
             className="  ease-out hover:scale-110
           rounded-xl overflow-hidden shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-700"
@@ -61,7 +61,7 @@ const About = () => {
             <div className="relative aspect-4/3 ">
               {" "}
               <img
-                src="/src/assets/apartment-2.jpg"
+                src="/assets/apartment-2.jpg"
                 alt="Modern Duplex"
                 className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
               />
