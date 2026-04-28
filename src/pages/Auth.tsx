@@ -12,6 +12,7 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
     email: "",
     phoneNumber: "",
     password: "",
+    confirmPassword: "",
     role: "",
   });
 
@@ -52,6 +53,11 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
     setSuccess("");
     try {
       if (type === "signup") {
+        if (form.password !== form.confirmPassword) {
+          setError("Passwords do not match");
+          setLoading(false);
+          return;
+        }
         await createUser({
           firstName: form.firstName,
           lastName: form.lastName,
@@ -277,6 +283,24 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
                 </button>
               </div>
             </div>
+
+            {type === "signup" && (
+              <div>
+                <label className="block text-sm font-bold text-brand-dark mb-2">
+                  Confirm Password
+                </label>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 
+      focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 
+      transition-all outline-none"
+                />
+              </div>
+            )}
 
             <button
               type="submit"
