@@ -6,7 +6,6 @@ import { Link, useNavigate } from "react-router";
 const AuthPage = ({ type }: { type: "login" | "signup" }) => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  // const [role, setRole] = useState("");
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -29,12 +28,29 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
     console.log(form);
   };
 
-  const handleAuth = async () => {
-    try {
-      setLoading(true);
-      setError("");
-      setSuccess("");
+  const handleRoles = (role: string) => {
+    const normalizedRole = role.toLowerCase();
+    switch (normalizedRole) {
+      case "admin":
+        navigate("/admin/dashboard");
+        break;
+      case "landlord":
+        navigate("/landlord");
+        break;
+      case "tenant":
+        navigate("/tenant");
+        break;
+      default:
+        navigate("/dashboard");
+    }
+  };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess("");
+    try {
       if (type === "signup") {
         await createUser({
           firstName: form.firstName,
@@ -54,20 +70,19 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
         });
 
         localStorage.setItem("token", data.token);
-        setSuccess("Login successful 🎉");
-        setTimeout(() => navigate("/dashboard"), 1000);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        setSuccess(`Welcome back, ${data.user.firstName}!`);
+        setTimeout(() => handleRoles(data.user.role), 1000);
       }
     } catch (err: any) {
-      setError(err?.response?.data?.message || "Something went wrong");
+      setError(
+        err?.response?.data?.message ||
+          "Authentication failed. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSubmit = (e: any) => {
-    console.log(e);
-    e.preventDefault();
-    handleAuth();
   };
 
   return (
@@ -87,7 +102,7 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
 
           <div className="flex items-center gap-4 text-white/60">
             <div className="flex -space-x-3">
-              {[1, 2, 3, 4].map((i) => (
+              {[1, 2, 3, 4].map((i: number) => (
                 <div
                   key={i}
                   className="w-10 h-10 rounded-full border-2 border-brand-dark bg-slate-300"
@@ -118,7 +133,7 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
             </p>
           </div>
 
-          <form className="space-y-5" onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
               <div className="text-red-500 text-sm font-medium bg-red-50 p-3 rounded-lg">
                 {error}
@@ -137,6 +152,7 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
                     First Name
                   </label>
                   <input
+                    required
                     type="text"
                     name="firstName"
                     value={form.firstName}
@@ -150,6 +166,7 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
                     Last Name
                   </label>
                   <input
+                    required
                     type="text"
                     name="lastName"
                     value={form.lastName}
@@ -171,6 +188,7 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
                   size={18}
                 />
                 <input
+                  required
                   type="email"
                   name="email"
                   value={form.email}
@@ -207,6 +225,7 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
               </label>
 
               <select
+                required
                 name="role"
                 value={form.role}
                 onChange={handleChange}

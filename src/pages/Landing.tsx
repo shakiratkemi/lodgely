@@ -343,35 +343,6 @@ const LandingPage = () => {
           </button>
         </div>
       </section>
-
-      {/* <section className="py-24 px-8 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-16">
-        <div className="flex-1">
-          <h2 className="text-4xl font-heading font-extrabold text-brand-dark mb-6">
-            Designed for the <br />
-            modern tenant.
-          </h2>
-          <p className="text-brand-light font-body mb-8 leading-relaxed">
-            We know that finding a home is more than just a transaction. It's
-            about finding where your next chapter begins. That's why we've built
-            tools to help you manage utilities, talk to landlords, and pay rent
-            in one place.
-          </p>
-          <button className="text-brand-primary font-bold flex items-center gap-2 group">
-            See how we protect your data{" "}
-            <ArrowRight
-              size={18}
-              className="group-hover:translate-x-1 transition-transform"
-            />
-          </button>
-        </div>
-        <div className="flex-1 w-full h-80 flex items-center justify-center">
-          <img
-            src="/assets/apartment-4.jpg"
-            alt="Modern Duplex"
-            className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
-          />
-        </div>
-      </section> */}
     </div>
   );
 };
