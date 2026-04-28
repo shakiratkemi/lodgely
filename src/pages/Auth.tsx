@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router";
 const AuthPage = ({ type }: { type: "login" | "signup" }) => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -29,35 +30,28 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
     console.log(form);
   };
 
-  const handleRoles = (role: string) => {
-    const normalizedRole = role.toLowerCase();
-    switch (normalizedRole) {
-      case "admin":
-        navigate("/admin/dashboard");
-        break;
-      case "landlord":
-        navigate("/landlord");
-        break;
-      case "tenant":
-        navigate("/tenant");
-        break;
-      default:
-        navigate("/dashboard");
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    setSuccess("");
+  const handleAuth = async () => {
     try {
+      setLoading(true);
+      setError("");
+      setSuccess("");
+
       if (type === "signup") {
-        if (form.password !== form.confirmPassword) {
-          setError("Passwords do not match");
-          setLoading(false);
+        if (!form.email || !form.password || !form.role) {
+          setError("Fill all required fields");
           return;
         }
+
+        if (!form.confirmPassword) {
+          setError("Confirm your password");
+          return;
+        }
+
+        if (form.password !== form.confirmPassword) {
+          setError("Passwords do not match");
+          return;
+        }
+
         await createUser({
           firstName: form.firstName,
           lastName: form.lastName,
@@ -77,18 +71,42 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
 
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
-
-        setSuccess(`Welcome back, ${data.user.firstName}!`);
-        setTimeout(() => handleRoles(data.user.role), 1000);
+        setSuccess("Login successful 🎉");
+        setTimeout(() => {
+          if (data?.user?.role) {
+            handleRoles(data.user.role);
+          } else {
+            navigate("/dashboard");
+          }
+        }, 1000);
       }
     } catch (err: any) {
-      setError(
-        err?.response?.data?.message ||
-          "Authentication failed. Please try again.",
-      );
+      setError(err?.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleRoles = (role: string) => {
+    const normalizedRole = role.toLowerCase();
+    switch (normalizedRole) {
+      case "admin":
+        navigate("/admin/dashboard");
+        break;
+      case "landlord":
+        navigate("/landlord");
+        break;
+      case "tenant":
+        navigate("/tenant");
+        break;
+      default:
+        navigate("/dashboard");
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleAuth();
   };
 
   return (
@@ -205,47 +223,51 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-bold text-brand-dark mb-2">
-                Phone Number
-              </label>
-              <div className="relative">
-                <Phone
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-                  size={18}
-                />
-                <input
-                  type="tel"
-                  name="phoneNumber"
-                  value={form.phoneNumber}
-                  onChange={handleChange}
-                  placeholder="+23401234567"
-                  className="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all outline-none"
-                />
+            {type === "signup" && (
+              <div>
+                <label className="block text-sm font-bold text-brand-dark mb-2">
+                  Phone Number
+                </label>
+                <div className="relative">
+                  <Phone
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                    size={18}
+                  />
+                  <input
+                    type="tel"
+                    name="phoneNumber"
+                    value={form.phoneNumber}
+                    onChange={handleChange}
+                    placeholder="+23401234567"
+                    className="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all outline-none"
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
-            <div>
-              <label className="block text-sm font-bold text-brand-dark mb-2">
-                Select Role
-              </label>
+            {type === "signup" && (
+              <div>
+                <label className="block text-sm font-bold text-brand-dark mb-2">
+                  Select Role
+                </label>
 
-              <select
-                required
-                name="role"
-                value={form.role}
-                onChange={handleChange}
-                className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 
+                <select
+                  required
+                  name="role"
+                  value={form.role}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 
                focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 
                transition-all outline-none"
-              >
-                <option value="" disabled>
-                  Choose your role
-                </option>
-                <option value="tenant">Tenant</option>
-                <option value="landlord">Landlord</option>
-              </select>
-            </div>
+                >
+                  <option value="" disabled>
+                    Select role
+                  </option>
+                  <option value="tenant">Tenant</option>
+                  <option value="landlord">Landlord</option>
+                </select>
+              </div>
+            )}
 
             <div>
               <div className="flex justify-between mb-2">
@@ -284,34 +306,40 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
               </div>
             </div>
 
-            <div>
-              <div className="flex justify-between mb-2">
-                <label className="text-sm font-bold text-brand-dark">
-                  Confirm Password
-                </label>
+            {type === "signup" && (
+              <div>
+                <div className="flex justify-between mb-2">
+                  <label className="text-sm font-bold text-brand-dark">
+                    Confirm Password
+                  </label>
+                </div>
+                <div className="relative">
+                  <Lock
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                    size={18}
+                  />
+                  <input
+                    name="confirmPassword"
+                    value={form.confirmPassword}
+                    onChange={handleChange}
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    className="w-full pl-12 pr-12 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-brand-dark"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff size={18} />
+                    ) : (
+                      <Eye size={18} />
+                    )}
+                  </button>
+                </div>
               </div>
-              <div className="relative">
-                <Lock
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-                  size={18}
-                />
-                <input
-                  name="confirmPassword"
-                  value={form.confirmPassword}
-                  onChange={handleChange}
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  className="w-full pl-12 pr-12 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all outline-none"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-brand-dark"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-            </div>
+            )}
 
             <button
               type="submit"
