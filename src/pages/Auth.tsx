@@ -284,23 +284,34 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
               </div>
             </div>
 
-            {type === "signup" && (
-              <div>
-                <label className="block text-sm font-bold text-brand-dark mb-2">
+            <div>
+              <div className="flex justify-between mb-2">
+                <label className="text-sm font-bold text-brand-dark">
                   Confirm Password
                 </label>
+              </div>
+              <div className="relative">
+                <Lock
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                  size={18}
+                />
                 <input
-                  type={showPassword ? "text" : "password"}
                   name="confirmPassword"
                   value={form.confirmPassword}
                   onChange={handleChange}
+                  type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 
-      focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 
-      transition-all outline-none"
+                  className="w-full pl-12 pr-12 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all outline-none"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-brand-dark"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
-            )}
+            </div>
 
             <button
               type="submit"
