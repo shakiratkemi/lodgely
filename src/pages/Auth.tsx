@@ -31,7 +31,7 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
   };
 
   const handleRoles = (role: string) => {
-    const normalizedRole = role?.toLowerCase().trim();
+    const normalizedRole = role.toLowerCase();
     switch (normalizedRole) {
       case "admin":
         navigate("/admin/dashboard");
@@ -78,8 +78,16 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
           role: form.role,
         });
 
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("user", JSON.stringify(res.user));
+        const user = res?.data?.data?.user;
+        const token = res?.data?.data?.token;
+
+        if (!user || !token) {
+          setError("Invalid signup response");
+          return;
+        }
+
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
 
         setSuccess("Account created successfully 🎉");
 
@@ -87,17 +95,23 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
           handleRoles(res.user.role);
         }, 800);
       } else {
-        const data = await loginUser({
+        const res = await loginUser({
           email: form.email,
           password: form.password,
         });
+        const user = res?.data?.data?.user;
+        const token = res?.data?.data?.token;
 
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        if (!user || !token) {
+          setError("Invalid login response from server");
+          return;
+        }
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
         setSuccess("Login successful 🎉");
-        
+
         setTimeout(() => {
-          handleRoles(data.user.role);
+          handleRoles(user.role);
         }, 800);
       }
     } catch (err: any) {
