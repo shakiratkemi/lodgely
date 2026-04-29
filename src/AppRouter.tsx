@@ -15,13 +15,16 @@ const LandlordDashboard = lazy(() => import("./pages/landlord/Dashboard"));
 const LandlordProperties = lazy(() => import("./pages/landlord/Properties"));
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
+  const dashboardPaths = ["/dashboard", "/landlord", "/tenant", "/admin"];
 
-  const hideNavbar = location.pathname.startsWith("/dashboard");
+  const isDashboard = dashboardPaths.some((path) =>
+    location.pathname.startsWith(path),
+  );
   return (
     <>
-      {!hideNavbar && <Navbar />}
-      {children}
-      {!hideNavbar && <Footer />}
+      {!isDashboard && <Navbar />}
+      <main className="min-h-screen">{children}</main>
+ <Footer />
     </>
   );
 };
