@@ -12,7 +12,10 @@ export const createUser = async (payload: any) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || "Registration failed");
+    console.log("Backend error:", data);
+    throw new Error(
+      data?.message || data?.errors?.[0] || "Registration failed",
+    );
   }
   return data;
 };
