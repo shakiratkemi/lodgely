@@ -94,7 +94,7 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
         navigate("/admin/dashboard");
         break;
       case "landlord":
-        navigate("/landlord");
+        navigate("/landlord/dashboard");
         break;
       case "tenant":
         navigate("/tenant");
