@@ -10,6 +10,9 @@ const PropertiesPage = lazy(() => import("./pages/Properties"));
 const AuthPage = lazy(() => import("./pages/Auth"));
 const DashboardPage = lazy(() => import("./pages/Dashboard"));
 const PropertyDetailPage = lazy(() => import("./pages/PropertyDetails"));
+const LandlordLayout = lazy(() => import("./layouts/LandlordLayout"));
+const LandlordDashboard = lazy(() => import("./pages/landlord/Dashboard"));
+const LandlordProperties = lazy(() => import("./pages/landlord/Properties"));
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
 
@@ -44,6 +47,10 @@ export const AppRouter = () => {
             <Route path="/login" element={<AuthPage type="login" />} />
             <Route path="/signup" element={<AuthPage type="signup" />} />
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/landlord" element={<LandlordLayout />}>
+              <Route index element={<LandlordDashboard />} />
+              <Route path="properties" element={<LandlordProperties />} />
+            </Route>
           </Routes>
         </Suspense>
       </AppLayout>

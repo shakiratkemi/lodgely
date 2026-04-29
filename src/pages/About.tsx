@@ -1,5 +1,5 @@
 import { Users, Target, ShieldCheck, Heart } from "lucide-react";
-import { ValueCard } from "../components";
+import { Card } from "../components";
 import { useNavigate } from "react-router";
 
 const About = () => {
@@ -86,17 +86,17 @@ const About = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-12">
-            <ValueCard
+            <Card
               icon={<ShieldCheck className="text-brand-primary" size={32} />}
               title="Radical Transparency"
               desc="No hidden charges. No legal jargon. What you see is exactly what you get."
             />
-            <ValueCard
+            <Card
               icon={<Target className="text-brand-primary" size={32} />}
               title="Precision Focused"
               desc="We verify everything—from the borehole water quality to the wiring safety."
             />
-            <ValueCard
+            <Card
               icon={<Users className="text-brand-primary" size={32} />}
               title="Human Centric"
               desc="We use technology to serve people, not to replace the human touch of home-finding."
