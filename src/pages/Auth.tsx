@@ -30,6 +30,23 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
     console.log(form);
   };
 
+  const handleRoles = (role: string) => {
+    const normalizedRole = role?.toLowerCase().trim();
+    switch (normalizedRole) {
+      case "admin":
+        navigate("/admin/dashboard");
+        break;
+      case "landlord":
+        navigate("/landlord");
+        break;
+      case "tenant":
+        navigate("/tenant");
+        break;
+      default:
+        navigate("/");
+    }
+  };
+
   const handleAuth = async () => {
     try {
       setLoading(true);
@@ -52,7 +69,7 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
           return;
         }
 
-        await createUser({
+        const res = await createUser({
           firstName: form.firstName,
           lastName: form.lastName,
           email: form.email,
@@ -61,8 +78,14 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
           role: form.role,
         });
 
+        localStorage.setItem("token", res.token);
+        localStorage.setItem("user", JSON.stringify(res.user));
+
         setSuccess("Account created successfully 🎉");
-        setTimeout(() => navigate("/login"), 1500);
+
+        setTimeout(() => {
+          handleRoles(res.user.role);
+        }, 800);
       } else {
         const data = await loginUser({
           email: form.email,
@@ -72,35 +95,15 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
         setSuccess("Login successful 🎉");
+        
         setTimeout(() => {
-          if (data?.user?.role) {
-            handleRoles(data.user.role);
-          } else {
-            navigate("/dashboard");
-          }
-        }, 1000);
+          handleRoles(data.user.role);
+        }, 800);
       }
     } catch (err: any) {
       setError(err?.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleRoles = (role: string) => {
-    const normalizedRole = role.toLowerCase();
-    switch (normalizedRole) {
-      case "admin":
-        navigate("/admin/dashboard");
-        break;
-      case "landlord":
-        navigate("/landlord/dashboard");
-        break;
-      case "tenant":
-        navigate("/tenant");
-        break;
-      default:
-        navigate("/dashboard");
     }
   };
 
@@ -123,18 +126,6 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
             "The simplest way to find a verified, executive home in Nigeria's
             top cities."
           </blockquote>
-
-          <div className="flex items-center gap-4 text-white/60">
-            <div className="flex -space-x-3">
-              {[1, 2, 3, 4].map((i: number) => (
-                <div
-                  key={i}
-                  className="w-10 h-10 rounded-full border-2 border-brand-dark bg-slate-300"
-                ></div>
-              ))}
-            </div>
-            <p className="text-sm font-bold">Join 10k+ verified tenants</p>
-          </div>
         </div>
 
         <img
