@@ -78,8 +78,8 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
           role: form.role,
         });
 
-        const user = res?.data?.data?.user;
-        const token = res?.data?.data?.token;
+        const user = res?.data?.user;
+        const token = res?.data?.token;
 
         if (!user || !token) {
           setError("Invalid signup response");
@@ -99,11 +99,12 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
           email: form.email,
           password: form.password,
         });
-        const user = res?.data?.data?.user;
-        const token = res?.data?.data?.token;
+        const user = res?.data?.user;
+        const token = res?.data?.token;
 
         if (!user || !token) {
           setError("Invalid login response");
+          setLoading(false);
           return;
         }
         localStorage.setItem("token", token);
