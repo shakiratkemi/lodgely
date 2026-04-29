@@ -103,7 +103,7 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
         const token = res?.data?.data?.token;
 
         if (!user || !token) {
-          setError("Invalid login response from server");
+          setError("Invalid login response");
           return;
         }
         localStorage.setItem("token", token);
@@ -115,9 +115,10 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
         }, 800);
       }
     } catch (err: any) {
-      setError(err?.response?.data?.message || "Something went wrong");
-    } finally {
-      setLoading(false);
+      const message =
+        err?.response?.data?.message || err?.message || "Something went wrong";
+
+      setError(message);
     }
   };
 
