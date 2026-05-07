@@ -4,3 +4,4 @@ export type { SideBarProps } from "./SideBar";
 export type { ITestimonialProps } from "./TestimonialCard";
 export type { Property } from "./Properties";
 export type { ILandlordProps } from "./Landlord";
+export type { IRentSchedule } from "./Tenant";

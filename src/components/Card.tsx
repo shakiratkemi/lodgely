@@ -1,4 +1,3 @@
-
 import type { ICard } from "../interfaces";
 
 const Card = ({ icon, title, desc, className = "" }: ICard) => {

@@ -1,6 +1,11 @@
 import type { SideBarProps } from "../interfaces";
 
-const SidebarItem = ({ icon, label, active = false, badge = "" }: SideBarProps) => (
+const SidebarItem = ({
+  icon,
+  label,
+  active = false,
+  badge = "",
+}: SideBarProps) => (
   <button
     className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all ${active ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/30" : "text-white/60 hover:bg-white/5 hover:text-white"}`}
   >

@@ -1,5 +1,3 @@
-
-
 export interface SideBarProps {
   icon: React.ReactNode;
   label: string;

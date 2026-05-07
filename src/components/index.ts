@@ -7,3 +7,5 @@ export { default as SideBarItem } from "./SideBarItem";
 export { default as StatCard } from "./StatCard";
 export { default as ActivityItem } from "./ActivityItem";
 export { default as Testimonials } from "./Testimonials";
+export { default as CreatePropertyModal } from "./PropertyForm";
+export { default as CreateLeaseModal } from "./LeaseForm";

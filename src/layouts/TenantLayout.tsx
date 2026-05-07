@@ -1,15 +1,15 @@
 import {
   LayoutDashboard,
-  Building2,
-  MessageSquare,
+  Search,
+  Send,
   FileText,
-  CreditCard,
+  Wallet,
+  Bell,
   LogOut,
-  User,
 } from "lucide-react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router";
 
-const LandlordLayout = () => {
+const TenantLayout = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -28,38 +28,32 @@ const LandlordLayout = () => {
   };
 
   const navItems = [
+    { name: "Dashboard", path: "/tenant", icon: <LayoutDashboard size={20} /> },
     {
-      name: "Dashboard",
-      path: "/landlord",
-      icon: <LayoutDashboard size={20} />,
+      name: "Browse Properties",
+      path: "/tenant/properties",
+      icon: <Search size={20} />,
+    },
+    { name: "My Requests", path: "/tenant/requests", icon: <Send size={20} /> },
+    { name: "My Lease", path: "/tenant/leases", icon: <FileText size={20} /> },
+    {
+      name: "Rent & Payments",
+      path: "/tenant/payments",
+      icon: <Wallet size={20} />,
     },
     {
-      name: "Properties",
-      path: "/landlord/properties",
-      icon: <Building2 size={20} />,
-    },
-    {
-      name: "Lease Requests",
-      path: "/landlord/leaserequest",
-      icon: <MessageSquare size={20} />,
-    },
-    {
-      name: "Active Leases",
-      path: "/landlord/leases",
-      icon: <FileText size={20} />,
-    },
-    {
-      name: "Payment Confirmations",
-      path: "/landlord/payments",
-      icon: <CreditCard size={20} />,
+      name: "Notifications",
+      path: "/tenant/notifications",
+      icon: <Bell size={20} />,
     },
   ];
 
   return (
     <div className="min-h-screen flex">
-      <aside className="w-64 bg-brand-dark text-white p-6 ">
-        <h2 className="text-2xl font-bold mb-10">Landlord</h2>
-        <div className="flex flex-col justify-between gap-28">
+      <aside className="w-64 bg-brand-dark text-white p-6 flex flex-col">
+        <h2 className="text-2xl font-bold mb-10">Tenant</h2>
+
+        <div className="flex flex-col justify-between gap-28 h-full">
           <nav className="space-y-4">
             {navItems.map((item) => {
               const isActive = pathname === item.path;
@@ -108,11 +102,11 @@ const LandlordLayout = () => {
         </div>
       </aside>
 
-      <main className="flex-1 p-8 bg-slate-50">
+      <main className="flex-1 p-8 bg-slate-50 overflow-y-auto">
         <Outlet />
       </main>
     </div>
   );
 };
 
-export default LandlordLayout;
+export default TenantLayout;

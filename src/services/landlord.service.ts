@@ -1,15 +1,83 @@
-import axios from "axios";
 import type { ILandlordProps } from "../interfaces";
+import api from "../api/api";
 
 export const getLandlordDashboard = async (): Promise<ILandlordProps> => {
-  const res = await axios.get(
-    "https://propms-api.fly.dev/api/v1/Dashboard/landlord",
-    {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    },
-  );
+  const res = await api.get("/Dashboard/landlord");
+  return res.data;
+};
 
+export const getMyProperties = async () => {
+  const res = await api.get("/Properties/my-properties");
+  return res.data;
+};
+
+export const addNewProperty = async (formData: FormData) => {
+  const res = await api.post("/Properties", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
+};
+export const updateProperty = async (id: string, updateData: any) => {
+  const res = await api.put(`/Properties/${id}`, updateData);
+  return res.data;
+};
+
+export const deleteProperty = async (id: string) => {
+  const res = await api.delete(`/Properties/${id}`);
+  return res.data;
+};
+
+export const getPendingLeaseRequests = async () => {
+  const res = await api.get("/LeaseRequests/pending");
+  return res.data;
+};
+
+export const approveLeaseRequest = async (id: string) => {
+  const res = await api.post(`/LeaseRequests/${id}/approve`, {});
+  return res.data;
+};
+
+export const rejectLeaseRequest = async (id: string, reason: string) => {
+  const res = await api.post(`/LeaseRequests/${id}/reject`, { reason });
+  return res.data;
+};
+
+export const createLease = async (leaseData: {
+  propertyId: string;
+  tenantId: string;
+  startDate: string;
+  endDate: string;
+  rentAmount: number;
+}) => {
+  const res = await api.post("/Leases", leaseData);
+  return res.data;
+};
+
+export const getActiveLeases = async () => {
+  const res = await api.get("/Leases/landlord-leases");
+  return res.data;
+};
+
+// Get payments waiting for landlord approval
+export const getPendingPayments = async () => {
+  const res = await api.get("/Payments/pending-confirmation");
+  return res.data;
+};
+
+// Confirm a specific payment
+export const confirmPayment = async (id: string) => {
+  const res = await api.post(`/Payments/${id}/confirm`);
+  return res.data;
+};
+
+// Reject a payment
+export const rejectPayment = async (id: string, reason: string) => {
+  const res = await api.post(`/Payments/${id}/reject`, { reason });
+  return res.data;
+};
+
+// View landlord's payment history
+export const getPaymentHistory = async () => {
+  const res = await api.get("/Payments/history/my");
   return res.data;
 };

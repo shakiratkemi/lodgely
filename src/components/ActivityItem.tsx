@@ -1,4 +1,3 @@
-
 const ActivityItem = ({
   user,
   action,
