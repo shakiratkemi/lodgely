@@ -110,7 +110,7 @@ const LandlordDashboard = () => {
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-red-100 shadow-sm bg-red-50/30">
+          <div className="bg-brand-white p-6 rounded-2xl border border-red-100 shadow-sm ">
             <div className="flex items-center gap-3 mb-2 text-red-600">
               <span className="text-sm font-bold">Total Overdue Amount</span>
             </div>
