@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Search,
@@ -8,11 +9,27 @@ import {
   LogOut,
 } from "lucide-react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router";
-
+import { getMyNotifications } from "../services/tenant.service";
 const TenantLayout = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const [unreadCount, setUnreadCount] = useState(0);
 
+  const checkUnreadNotifications = async () => {
+    try {
+      const res = await getMyNotifications();
+      const list = res.data || res;
+      const unreadOnly = list.filter((note: any) => note.isRead === false);
+
+      setUnreadCount(unreadOnly.length);
+    } catch (err) {
+      console.error("Could not fetch notification count", err);
+    }
+  };
+
+  useEffect(() => {
+    checkUnreadNotifications();
+  }, [pathname]);
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
 
@@ -45,6 +62,7 @@ const TenantLayout = () => {
       name: "Notifications",
       path: "/tenant/notifications",
       icon: <Bell size={20} />,
+      isNotify: true,
     },
   ];
 
@@ -57,6 +75,7 @@ const TenantLayout = () => {
           <nav className="space-y-4">
             {navItems.map((item) => {
               const isActive = pathname === item.path;
+              const isNotify = item.name === "Notifications";
               return (
                 <Link
                   key={item.path}
@@ -71,6 +90,12 @@ const TenantLayout = () => {
                     className={`${isActive ? "text-white" : "group-hover:text-brand-primary"} transition-colors`}
                   >
                     {item.icon}
+
+                    {isNotify && unreadCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center border-2 border-brand-dark">
+                        {unreadCount}
+                      </span>
+                    )}
                   </span>
                   {item.name}
                 </Link>

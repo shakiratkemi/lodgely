@@ -21,17 +21,23 @@ export const createUser = async (payload: any) => {
 };
 
 export const loginUser = async (payload: any) => {
+  console.log("Payload being sent to API:", payload);
   const res = await fetch(`${BASE_URL}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Accept: "application/json",
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      email: payload.email,
+      password: payload.password,
+    }),
   });
 
   const data = await res.json();
 
   if (!res.ok) {
+    console.error("Server Response:", data);
     throw new Error(data.message || "Login failed");
   }
 

@@ -47,3 +47,23 @@ export const getLeaseById = async (id: string) => {
   const res = await api.get(`/Leases/${id}`);
   return res.data;
 };
+
+export const initializePayment = async (scheduleId: string) => {
+  const res = await api.post(`/Payments/paystack/initialize`, { scheduleId });
+  return res.data;
+};
+
+export const verifyPaystackPayment = async (reference: string) => {
+  const res = await api.post(`/Payments/paystack/verify`, { reference });
+  return res.data;
+};
+
+export const getMyPaymentHistory = async () => {
+  const res = await api.get(`/Payments/history/my`);
+  return res.data;
+};
+
+export const markNotificationAsRead = async (id: string) => {
+  const res = await api.post(`/Notifications/${id}/read`);
+  return res.data;
+};

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import { getLeaseById } from "../services/tenant.service";
+import { getLeaseById, initializePayment } from "../services/tenant.service";
 import {
   ArrowLeft,
   CreditCard,
@@ -15,6 +15,7 @@ const LeaseDetails = () => {
   const navigate = useNavigate();
   const [lease, setLease] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [payingId, setPayingId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchLease = async () => {
@@ -29,6 +30,23 @@ const LeaseDetails = () => {
     };
     fetchLease();
   }, [id]);
+
+  const handlePayment = async (scheduleId: string) => {
+    try {
+      setPayingId(scheduleId);
+      const res = await initializePayment(scheduleId);
+      if (res.data?.authorization_url) {
+        window.location.href = res.data.authorization_url;
+      } else if (res.authorization_url) {
+        window.location.href = res.authorization_url;
+      }
+    } catch (err) {
+      console.error("Payment initialization failed", err);
+      alert("Failed to start payment. Please try again.");
+    } finally {
+      setPayingId(null);
+    }
+  };
 
   if (loading)
     return (
@@ -119,7 +137,16 @@ const LeaseDetails = () => {
                       </td>
                       <td className="px-6 py-4 text-right">
                         {item.status !== "Paid" && (
-                          <button className="bg-brand-primary text-white text-[10px] font-black px-4 py-2 rounded-xl">
+                          <button
+                            disabled={payingId === item.id}
+                            onClick={() => handlePayment(item.id)}
+                            className="bg-brand-primary text-white text-[10px] font-black px-4 py-2 rounded-xl"
+                          >
+                            {payingId === item.id ? (
+                              <AiOutlineLoading3Quarters className="animate-spin" />
+                            ) : (
+                              <CreditCard size={14} />
+                            )}
                             PAY NOW
                           </button>
                         )}

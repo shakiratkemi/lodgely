@@ -1,5 +1,11 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router";
 import { Footer, Navbar } from "./components";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
@@ -11,6 +17,17 @@ const AuthPage = lazy(() => import("./pages/Auth"));
 const DashboardPage = lazy(() => import("./pages/Dashboard"));
 const PropertyDetailPage = lazy(() => import("./pages/PropertyDetails"));
 const LeaseDetailPage = lazy(() => import("./pages/LeaseDetails"));
+
+const AdminLayout = lazy(() => import("./layouts/AdminLayout"));
+const AdminDashboard = lazy(() => import("./pages/Admin/Dashboard"));
+// const AdminPropertyQueue = lazy(
+//   () => import("./pages/admin/PropertyQueue"),
+// );
+const AdminUserManagement = lazy(() => import("./pages/Admin/UserManagement"));
+// const AdminNotifications = lazy(
+//   () => import("./pages/admin/Notifications"),
+// );
+
 const LandlordLayout = lazy(() => import("./layouts/LandlordLayout"));
 const LandlordDashboard = lazy(() => import("./pages/landlord/Dashboard"));
 const LandlordProperties = lazy(() => import("./pages/landlord/Properties"));
@@ -19,11 +36,18 @@ const LandlordLeaseRequests = lazy(
 );
 const LandlordLeases = lazy(() => import("./pages/landlord/Leases"));
 const LandlordPayments = lazy(() => import("./pages/landlord/Payments"));
+
+const LandlordNotifications = lazy(
+  () => import("./pages/landlord/Notifications"),
+);
+
 const TenantLayout = lazy(() => import("./layouts/TenantLayout"));
 const TenantDashboard = lazy(() => import("./pages/Tenant/Dashboard"));
 const TenantProperties = lazy(() => import("./pages/Tenant/Properties"));
 const TenantRequests = lazy(() => import("./pages/Tenant/Requests"));
 const TenantLeases = lazy(() => import("./pages/Tenant/Leases"));
+const TenantPayments = lazy(() => import("./pages/Tenant/Payments"));
+const TenantNotifications = lazy(() => import("./pages/Tenant/Notifications"));
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -42,6 +66,12 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const AppRouter = () => {
+  const userString = localStorage.getItem("user");
+  const user = userString ? JSON.parse(userString) : null;
+  const isAdmin =
+    user?.role === "Admin" ||
+    user?.role === 0 ||
+    String(user?.role).toLowerCase() === "admin";
   return (
     <BrowserRouter>
       <AppLayout>
@@ -61,6 +91,17 @@ export const AppRouter = () => {
             <Route path="/property/:id" element={<PropertyDetailPage />} />
             <Route path="/login" element={<AuthPage type="login" />} />
             <Route path="/signup" element={<AuthPage type="signup" />} />
+
+            <Route
+              path="/admin"
+              element={isAdmin ? <AdminLayout /> : <Navigate to="/login" />}
+            >
+              <Route index element={<AdminDashboard />} />
+              {/* <Route path="properties" element={<AdminPropertyQueue />} /> */}
+              <Route path="users" element={<AdminUserManagement />} />
+              {/* <Route path="notifications" element={<AdminNotifications />} /> */}
+            </Route>
+
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/landlord" element={<LandlordLayout />}>
               <Route index element={<LandlordDashboard />} />
@@ -68,6 +109,7 @@ export const AppRouter = () => {
               <Route path="leaserequest" element={<LandlordLeaseRequests />} />
               <Route path="leases" element={<LandlordLeases />} />
               <Route path="payments" element={<LandlordPayments />} />
+              <Route path="notifications" element={<LandlordNotifications />} />
             </Route>
 
             <Route path="/tenant" element={<TenantLayout />}>
@@ -77,8 +119,8 @@ export const AppRouter = () => {
               <Route path="requests" element={<TenantRequests />} />
               <Route path="leases" element={<TenantLeases />} />
               <Route path="lease/:id" element={<LeaseDetailPage />} />
-              {/* <Route path="payments" element={<TenantPayments />} />
-              <Route path="notifications" element={<TenantNotifications />} /> */}
+              <Route path="payments" element={<TenantPayments />} />
+              <Route path="notifications" element={<TenantNotifications />} />
             </Route>
           </Routes>
         </Suspense>

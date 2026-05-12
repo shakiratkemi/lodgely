@@ -81,3 +81,13 @@ export const getPaymentHistory = async () => {
   const res = await api.get("/Payments/history/my");
   return res.data;
 };
+
+export const getMyNotifications = async () => {
+  const res = await api.get("/Notifications");
+  return res.data;
+};
+
+export const markNotificationAsRead = async (id: string) => {
+  const res = await api.post(`/Notifications/${id}/read`);
+  return res.data;
+};

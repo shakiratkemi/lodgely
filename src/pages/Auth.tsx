@@ -30,19 +30,23 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
     console.log(form);
   };
 
-  const handleRoles = (role: string) => {
-    const normalizedRole = role.toLowerCase();
+  const handleRoles = (role: any) => {
+    const normalizedRole = String(role).toLocaleLowerCase();
     switch (normalizedRole) {
+      case "0":
       case "admin":
-        navigate("/admin/dashboard");
+        navigate("/admin");
         break;
+      case "1":
       case "landlord":
         navigate("/landlord");
         break;
+      case "2":
       case "tenant":
         navigate("/tenant");
         break;
       default:
+        console.warn("Unknown role detected:", role);
         navigate("/");
     }
   };
