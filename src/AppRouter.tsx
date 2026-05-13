@@ -69,9 +69,8 @@ export const AppRouter = () => {
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
   const isAdmin =
-    user?.role === "Admin" ||
-    user?.role === 0 ||
-    String(user?.role).toLowerCase() === "admin";
+    user && (String(user.role).toLowerCase() === "admin" || user.role === 0);
+    console.log("Current User Role:", user?.role, "isAdmin:", isAdmin);
   return (
     <BrowserRouter>
       <AppLayout>
