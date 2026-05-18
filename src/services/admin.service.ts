@@ -1,6 +1,5 @@
 const BASE_URL = "https://propms-api.fly.dev/api/v1";
 
-
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
   return {
@@ -53,6 +52,23 @@ export const adminService = {
 
   toggleUserStatus: async (id: string, action: "suspend" | "activate") => {
     const res = await fetch(`${BASE_URL}/Admin/users/${id}/${action}`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+    });
+    return res.json();
+  },
+  getNotifications: async () => {
+    const res = await fetch(`${BASE_URL}/Notifications`, {
+      headers: getAuthHeaders(),
+    });
+    if (!res.ok) {
+      throw new Error(`Server error: ${res.status}`);
+    }
+    return res.json();
+  },
+
+  markAsRead: async (id: string) => {
+    const res = await fetch(`${BASE_URL}/Notifications/${id}/read`, {
       method: "POST",
       headers: getAuthHeaders(),
     });

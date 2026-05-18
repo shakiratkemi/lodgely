@@ -18,6 +18,7 @@ const UserManagement = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -37,25 +38,40 @@ const UserManagement = () => {
 
   // Handle Search and Filtering
   useEffect(() => {
-    let result = users;
+    let result = [...users];
 
     if (searchTerm) {
+      const term = searchTerm.toLowerCase();
       result = result.filter(
         (u) =>
-          `${u.firstName} ${u.lastName}`
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          u.email.toLowerCase().includes(searchTerm.toLowerCase()),
+          `${u.firstName} ${u.lastName}`.toLowerCase().includes(term) ||
+          u.email.toLowerCase().includes(term),
+      );
+      console.log(
+        "Check actual roles:",
+        users.map((u) => ({ name: u.firstName, roleValue: u.role })),
       );
     }
 
     if (activeFilter !== "all") {
-      const roleMap: any = { admin: 0, landlord: 1, tenant: 2 };
-      result = result.filter((u) => u.role === roleMap[activeFilter]);
-    }
+      result = result.filter((u) => {
+        // We convert both to lowercase to make sure "Landlord" matches "landlord"
+        const userRole = String(u.role).toLowerCase();
+        const pillName = activeFilter.toLowerCase();
 
+        return userRole === pillName;
+      });
+    }
+    console.log("Current Users in State:", users);
+    console.log("Filtered Users:", result);
     setFilteredUsers(result);
   }, [searchTerm, activeFilter, users]);
+
+  useEffect(() => {
+    const closeMenu = () => setActiveMenu(null);
+    window.addEventListener("click", closeMenu);
+    return () => window.removeEventListener("click", closeMenu);
+  }, []);
 
   if (loading)
     return (
@@ -162,18 +178,16 @@ const UserManagement = () => {
                 <td className="px-8 py-6">
                   <span
                     className={`text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter ${
-                      user.role === 0
-                        ? "bg-red-50 text-red-600"
-                        : user.role === 1
-                          ? "bg-purple-50 text-purple-600"
-                          : "bg-blue-50 text-blue-600"
+                      String(user.role).toLocaleLowerCase() === "admin"
+                        ? "bg-brand-primary/15 text-brand-primary"
+                        : String(user.role).toLocaleLowerCase() === "landlord"
+                          ? "bg-brand-secondary/15 text-brand-secondary"
+                          : String(user.role).toLocaleLowerCase() === "tenant"
+                            ? "bg-brand-accent/15 text-brand-accent"
+                            : "bg-brand-light0/15 text-brand-light0"
                     }`}
                   >
-                    {user.role === 0
-                      ? "System Admin"
-                      : user.role === 1
-                        ? "Landlord"
-                        : "Tenant"}
+                    {user.role}
                   </span>
                 </td>
                 <td className="px-8 py-6">
@@ -185,9 +199,49 @@ const UserManagement = () => {
                   </div>
                 </td>
                 <td className="px-8 py-6 text-right">
-                  <button className="p-2 hover:bg-slate-100 rounded-xl text-slate-400 hover:text-slate-900 transition-all">
-                    <MoreVertical size={18} />
-                  </button>
+                  <div className="relative inline-block text-left">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveMenu(activeMenu === user.id ? null : user.id);
+                      }}
+                      className={`p-2 rounded-xl transition-all ${
+                        activeMenu === user.id
+                          ? "bg-slate-900 text-white"
+                          : "hover:bg-slate-100 text-slate-400 hover:text-slate-900"
+                      }`}
+                    >
+                      <MoreVertical size={18} />
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    {activeMenu === user.id && (
+                      <div className="absolute right-0 mt-2 w-48 bg-brand-white/80 backdrop-blur-xl border border-white/40 shadow-2xl rounded-2xl z-50 py-2 animate-in fade-in zoom-in duration-200 origin-top-right">
+                        <p className="px-4 py-2 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 mb-1">
+                          Account Actions
+                        </p>
+
+                        <button className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-brand-primary hover:text-white transition-colors flex items-center gap-2">
+                          View Profile
+                        </button>
+
+                        <button className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-brand-primary hover:text-white transition-colors">
+                          Edit Permissions
+                        </button>
+
+                        {/* Conditional Action: Only show 'View Properties' for Landlords */}
+                        {String(user.role).toLowerCase() === "landlord" && (
+                          <button className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-brand-primary hover:text-white transition-colors border-t border-slate-50 mt-1">
+                            Manage Properties
+                          </button>
+                        )}
+
+                        <button className="w-full text-left px-4 py-2 text-xs font-bold text-red-500 hover:bg-red-500 hover:text-white transition-colors border-t border-slate-50 mt-1">
+                          Suspend Account
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
@@ -195,10 +249,22 @@ const UserManagement = () => {
         </table>
 
         {filteredUsers.length === 0 && (
-          <div className="py-20 text-center">
-            <p className="text-slate-400 font-bold italic">
-              No users found matching your criteria.
+          <div className="py-24 text-center bg-white">
+            <div className="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Search className="text-slate-200" size={32} />
+            </div>
+            <p className="text-slate-400 font-bold italic text-sm">
+              No users found matching "{searchTerm}"
             </p>
+            <button
+              onClick={() => {
+                setSearchTerm("");
+                setActiveFilter("all");
+              }}
+              className="mt-4 text-xs font-black text-brand-primary uppercase tracking-widest hover:underline"
+            >
+              Clear all filters
+            </button>
           </div>
         )}
       </div>

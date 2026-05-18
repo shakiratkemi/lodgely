@@ -20,13 +20,11 @@ const LeaseDetailPage = lazy(() => import("./pages/LeaseDetails"));
 
 const AdminLayout = lazy(() => import("./layouts/AdminLayout"));
 const AdminDashboard = lazy(() => import("./pages/Admin/Dashboard"));
-// const AdminPropertyQueue = lazy(
+const AdminPropertyQueue = lazy(() => import("./pages/Admin/PropertyQueue"));
 //   () => import("./pages/admin/PropertyQueue"),
 // );
 const AdminUserManagement = lazy(() => import("./pages/Admin/UserManagement"));
-// const AdminNotifications = lazy(
-//   () => import("./pages/admin/Notifications"),
-// );
+const AdminNotifications = lazy(() => import("./pages/Admin/Notifications"));
 
 const LandlordLayout = lazy(() => import("./layouts/LandlordLayout"));
 const LandlordDashboard = lazy(() => import("./pages/landlord/Dashboard"));
@@ -70,7 +68,6 @@ export const AppRouter = () => {
   const user = userString ? JSON.parse(userString) : null;
   const isAdmin =
     user && (String(user.role).toLowerCase() === "admin" || user.role === 0);
-    console.log("Current User Role:", user?.role, "isAdmin:", isAdmin);
   return (
     <BrowserRouter>
       <AppLayout>
@@ -96,9 +93,9 @@ export const AppRouter = () => {
               element={isAdmin ? <AdminLayout /> : <Navigate to="/login" />}
             >
               <Route index element={<AdminDashboard />} />
-              {/* <Route path="properties" element={<AdminPropertyQueue />} /> */}
+              <Route path="properties" element={<AdminPropertyQueue />} />
               <Route path="users" element={<AdminUserManagement />} />
-              {/* <Route path="notifications" element={<AdminNotifications />} /> */}
+              <Route path="notifications" element={<AdminNotifications />} />
             </Route>
 
             <Route path="/dashboard" element={<DashboardPage />} />

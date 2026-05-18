@@ -15,8 +15,10 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useNavigate } from "react-router";
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<any[]>([]);
@@ -37,7 +39,7 @@ const AdminDashboard = () => {
 
   if (loading)
     return (
-      <div className="flex flex-col justify-center items-center h-[60vh] text-brand-primary">
+      <div className="flex flex-col justify-center items-center h-[60vh] text-brand-secondary">
         <AiOutlineLoading3Quarters className="animate-spin w-10 h-10 mb-4" />
         <span className="font-black italic">FETCHING SYSTEM DATA...</span>
       </div>
@@ -141,7 +143,10 @@ const AdminDashboard = () => {
             <h2 className="text-xl font-black text-slate-900 tracking-tight">
               Recent Onboarding
             </h2>
-            <button className="text-xs font-black text-brand-primary hover:underline flex items-center gap-1 uppercase">
+            <button
+              onClick={() => navigate("/admin/userManagement")}
+              className="text-xs font-black text-brand-primary hover:underline flex items-center gap-1 uppercase"
+            >
               View All <ExternalLink size={14} />
             </button>
           </div>
