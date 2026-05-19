@@ -1,7 +1,8 @@
 import { LuCircleCheck, LuShieldCheck } from "react-icons/lu";
 import { Card, Testimonials } from "../components";
 import { Link, useNavigate } from "react-router";
-import { propertiesData } from "../data/Properties";
+import { getAllProperties } from "../services/tenant.service";
+import type { Property } from "../interfaces";
 import {
   ShieldCheck,
   Zap,
@@ -16,14 +17,54 @@ import {
 
 import { RiDoorOpenLine } from "react-icons/ri";
 import { IoIosPeople } from "react-icons/io";
+import { useEffect, useState } from "react";
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchFeaturedProperties = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const res = await getAllProperties({});
+
+        const extractedItems =
+          res?.data?.items || res?.data || res?.items || [];
+        setProperties(Array.isArray(extractedItems) ? extractedItems : []);
+      } catch (err) {
+        console.error(
+          "Failed to pull featured properties for landing page:",
+          err,
+        );
+        setError("Unable to sync latest listings at this time.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedProperties();
+  }, []);
+
+  const renderPrice = (property: Property) => {
+    if (property.price) return property.price;
+    if (property.price) {
+      return new Intl.NumberFormat("en-NG", {
+        style: "currency",
+        currency: "NGN",
+        maximumFractionDigits: 0,
+      }).format(Number(property.price));
+    }
+    return "Contact for Price";
+  };
 
   return (
-    <div className="min-h-screen bg-white">
-      <header className="bg-[url('/assets/lodgely.png')] h-160 bg-cover bg-center flex items-center px-8">
-        <div className="  max-w-100 bg-brand-dark/20 glass-effect p-12 rounded-4xl border border-white/20 shadow-2xl ">
+    <div className="min-h-[70vh] lg:h-[80vh] max-w-xl bg-white">
+      <header className="bg-[url('/assets/lodgely.png')]  h-160 bg-cover bg-center flex items-center px-8">
+        <div className="lg:max-w-100 bg-brand-dark/20 glass-effect p-12 rounded-4xl border border-white/20 shadow-2xl ">
           <h1 className="text-4xl md:text-5xl font-extrabold text-brand-white leading-tight">
             Manage Properties, Tenants & Rent –
             <span className="text-[#ffdada]"> All in One Place</span>
@@ -253,63 +294,67 @@ const LandingPage = () => {
               View All
             </Link>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {propertiesData.slice(0, 3).map((property) => (
-              <Link
-                to={`/property/${property.id}`}
-                key={property.id}
-                className="group bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
-              >
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src={property.images[0]}
-                    alt={property.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-brand-dark">
-                    {property.category}
-                  </div>
-                  <div className="absolute bottom-4 right-4 bg-brand-dark/80 backdrop-blur-md text-white px-4 py-2 rounded-xl font-black">
-                    {property.price}
-                    <span className="text-[10px] opacity-70">
-                      {" "}
-                      {property.category === "Shortlet" ? "/night" : "/yr"}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="p-8">
-                  <div className="flex items-center gap-1 text-slate-400 text-xs font-bold mb-2 uppercase tracking-tighter">
-                    <MapPin size={12} className="text-brand-primary" />{" "}
-                    {property.location}
-                  </div>
-                  <h3 className="text-xl font-heading font-bold text-brand-dark mb-4 line-clamp-1">
-                    {property.title}
-                  </h3>
-
-                  <div className="flex justify-between items-center py-4 border-t border-slate-50">
-                    <div className="flex items-center gap-4 text-brand-dark font-bold text-xs">
-                      {property.beds !== "N/A" && (
-                        <span className="flex items-center gap-1">
-                          <Bed size={16} className="text-slate-300" />{" "}
-                          {property.beds}
-                        </span>
-                      )}
-                      <span className="flex items-center gap-1">
-                        <Bath size={16} className="text-slate-300" />{" "}
-                        {property.baths}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Maximize size={16} className="text-slate-300" />{" "}
-                        {property.sqft}
-                      </span>
+          {!loading && !error && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {properties.slice(0, 3).map((property) => (
+                <Link
+                  to={`/property/${property.id}`}
+                  key={property.id}
+                  className="group bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
+                >
+                  <div className="relative h-64 overflow-hidden">
+                    <img
+                      src={property.images[0]}
+                      alt={property.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-brand-dark">
+                      {property.category}
+                    </div>
+                    <div className="absolute bottom-4 right-4 bg-brand-dark/80 backdrop-blur-md text-white px-4 py-2 rounded-xl font-black">
+                      {property.price}
+                      <span className="text-[10px] opacity-70"> </span>
                     </div>
                   </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+
+                  <div className="p-8">
+                    <div className="flex items-center gap-1 text-slate-400 text-xs font-bold mb-2 uppercase tracking-tighter">
+                      <MapPin size={12} className="text-brand-primary" />{" "}
+                      {property.location}
+                    </div>
+                    <h3 className="text-xl font-heading font-bold text-brand-dark mb-4 line-clamp-1">
+                      {property.title}
+                    </h3>
+
+                    <div className="flex justify-between items-center py-4 border-t border-slate-50">
+                      <div className="flex items-center gap-4 text-brand-dark font-bold text-xs">
+                        {property.beds !== "N/A" && (
+                          <span className="flex items-center gap-1">
+                            <Bed size={16} className="text-slate-300" />{" "}
+                            {property.beds}
+                          </span>
+                        )}
+                        <span className="flex items-center gap-1">
+                          <Bath size={16} className="text-slate-300" />{" "}
+                          {property.baths}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Maximize size={16} className="text-slate-300" />{" "}
+                          {property.sqft}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+
+          {!loading && !error && properties.length === 0 && (
+            <div className="text-center py-12 text-white/40 text-sm">
+              No managed spaces currently listed as visible. Check back later!
+            </div>
+          )}
         </div>
       </section>
 

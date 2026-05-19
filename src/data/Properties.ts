@@ -10,7 +10,7 @@ export const propertiesData: Property[] = [
     baths: 4,
     sqft: "3,200",
     type: "Premium",
-    category: "Full House",
+    category: "House",
     description:
       "A sprawling executive home featuring smart automation and premium finishes.",
     images: ["/assets/apartment-1.jpg", "/assets/lekki.jpg"],
@@ -26,7 +26,7 @@ export const propertiesData: Property[] = [
     baths: 2,
     sqft: "1,400",
     type: "Executive",
-    category: "Shortlet",
+    category: "Apartment",
     description: "Luxury short-stay apartment with breathtaking ocean views.",
     images: ["/assets/apartment-2.jpg", "/assets/apartment-4.jpg"],
     amenities: ["WiFi", "Netflix", "Ocean View"],
@@ -41,7 +41,7 @@ export const propertiesData: Property[] = [
     baths: 8,
     sqft: "6,000",
     type: "Premium",
-    category: "Commercial",
+    category: "Shop",
     description:
       "Open-plan office space in the most prestigious district of Lagos.",
     images: ["/assets/apartment-3.jpg", "/assets/vi.jpg"],
@@ -56,7 +56,7 @@ export const propertiesData: Property[] = [
     baths: 6,
     sqft: "5,500",
     type: "Premium",
-    category: "Commercial",
+    category: "Shop",
     description: "Prime office space in a high-rise building.",
     images: ["/assets/lodgely7.avif", "/assets/vi.jpg"],
     status: "Occupied",
@@ -84,7 +84,7 @@ export const propertiesData: Property[] = [
     baths: 6,
     sqft: "4,500",
     type: "Premium",
-    category: "Full House",
+    category: "House",
     description:
       "Located in the most secure zone of the FCT, perfect for diplomats and top executives.",
     images: ["/assets/lodgely.png", "/assets/duplex.jpg"],
@@ -99,7 +99,7 @@ export const propertiesData: Property[] = [
     baths: 4,
     sqft: "2,800",
     type: "Executive",
-    category: "Commercial",
+    category: "Shop",
     description:
       "Modern open-plan office with high-speed fiber internet and central cooling.",
     images: ["/assets/shop.png"],
@@ -130,7 +130,7 @@ export const propertiesData: Property[] = [
     baths: 5,
     sqft: "4,000",
     type: "Premium",
-    category: "Full House",
+    category: "House",
     description:
       "Elegant mansion with high-security features in PH's most prestigious neighborhood.",
     images: ["/assets/apartment-5.jpg"],
@@ -145,7 +145,7 @@ export const propertiesData: Property[] = [
     baths: 1,
     sqft: "950",
     type: "Executive",
-    category: "Shortlet",
+    category: "Apartment",
     description:
       "Tailored for business travelers in the industrial hub of the Niger Delta.",
     images: ["/assets/lodgely2.png"],
@@ -161,7 +161,7 @@ export const propertiesData: Property[] = [
     baths: 10,
     sqft: "8,000",
     type: "Standard",
-    category: "Commercial",
+    category: "Shop",
     description:
       "Large retail space perfect for a showroom or corporate headquarters.",
     images: ["/assets/shop1.png"],
@@ -176,7 +176,7 @@ export const propertiesData: Property[] = [
     baths: 3,
     sqft: "3,500",
     type: "Standard",
-    category: "Full House",
+    category: "House",
     description:
       "A blend of Northern architectural aesthetics with modern interior design.",
     images: ["/assets/apartment.jpg"],
@@ -207,7 +207,7 @@ export const propertiesData: Property[] = [
     baths: 3,
     sqft: "2,400",
     type: "Standard",
-    category: "Full House",
+    category: "House",
     description: "Peaceful family home in a well-maintained gated community.",
     images: ["/assets/lodgely6.png"],
     status: "Occupied",
@@ -237,7 +237,7 @@ export const propertiesData: Property[] = [
     baths: 4,
     sqft: "3,100",
     type: "Premium",
-    category: "Full House",
+    category: "House",
     description:
       "High-elevation property with a scenic view of the city landscape.",
     images: ["/assets/lodgely4.png"],
