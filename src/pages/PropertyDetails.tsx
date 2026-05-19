@@ -15,7 +15,6 @@ import {
   Send,
   Loader2,
 } from "lucide-react";
-// Import your service methods
 import {
   getPropertyDetails,
   submitLeaseRequest,

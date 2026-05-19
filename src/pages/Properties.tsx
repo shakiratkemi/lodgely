@@ -1,6 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router";
-import { propertiesData } from "../data/Properties";
+import { getAllProperties } from "../services/tenant.service";
+import type { Property } from "../interfaces";
 import {
   MapPin,
   Bed,
@@ -9,32 +10,60 @@ import {
   Search,
   SlidersHorizontal,
 } from "lucide-react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const PropertiesPage = () => {
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  // Filter Logic
-  const filteredProperties = useMemo(() => {
-    return propertiesData.filter((property) => {
-      const matchesSearch =
-        property.title.toLowerCase().includes(search.toLowerCase()) ||
-        property.location.toLowerCase().includes(search.toLowerCase());
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-      const matchesCategory =
-        selectedCategory === "All" || property.category === selectedCategory;
+        // Prepare the query parameters for the API
+        const params: Record<string, string> = {};
+        if (selectedCategory !== "All") {
+          params.category = selectedCategory;
+        }
+        if (search.trim() !== "") {
+          params.search = search;
+        }
 
-      return matchesSearch && matchesCategory;
-    });
+        const response = await getAllProperties(params);
+        if (response && Array.isArray(response)) {
+          setProperties(response);
+        } else if (response?.data && Array.isArray(response.data)) {
+          setProperties(response.data);
+        } else if (
+          response?.data?.items &&
+          Array.isArray(response.data.items)
+        ) {
+          setProperties(response.data.items);
+        } else if (response?.items && Array.isArray(response.items)) {
+          setProperties(response.items);
+        } else {
+          setProperties([]);
+        }
+      } catch (err) {
+        console.error("Failed to fetch properties:", err);
+        setError("Could not load properties. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    const delayDebounceFn = setTimeout(() => {
+      fetchProperties();
+    }, 400);
+
+    return () => clearTimeout(delayDebounceFn);
   }, [search, selectedCategory]);
 
-  const categories = [
-    "All",
-    "Apartment",
-    "Shortlet",
-    "Commercial",
-    "Full House",
-  ];
+  const categories = ["All", "House", "Apartment", "Shop", "Land"];
 
   return (
     <div className="bg-slate-50 min-h-screen pb-20">
@@ -42,14 +71,14 @@ const PropertiesPage = () => {
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-heading font-black text-white mb-6">
             Find Your Dream Space in{" "}
-            <span className="text-brand-primary">Nigeria</span>
+            <span className="text-brand-primary">Lagos</span>
           </h1>
 
           <div className="max-w-3xl mx-auto relative group">
             <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-primary transition-colors" />
             <input
               type="text"
-              placeholder="Search by city (Abuja, Lagos, Kano...) or property name"
+              placeholder="Search by city (Ikeja, Lekki,Surulere,....) or property name"
               className="w-full pl-16 pr-6 py-5 rounded-2xl bg-white shadow-2xl outline-none text-brand-dark font-medium"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -84,13 +113,27 @@ const PropertiesPage = () => {
       <section className="max-w-7xl mx-auto px-8 mt-12">
         <div className="flex justify-between items-end mb-8">
           <h2 className="text-2xl font-heading font-black text-brand-dark">
-            Showing {filteredProperties.length} Properties
+            {loading
+              ? "Loading spaces..."
+              : `Showing ${properties.length} Properties`}
           </h2>
         </div>
 
-        {filteredProperties.length > 0 ? (
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-20">
+            <AiOutlineLoading3Quarters
+              className="animate-spin text-brand-secondary mb-4"
+              size={40}
+            />
+            <p className="text-slate-500 font-medium">
+              Hunting down the best properties for you...
+            </p>
+          </div>
+        )}
+
+        {!loading && !error && properties.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProperties.map((property) => (
+            {properties.map((property) => (
               <Link
                 to={`/property/${property.id}`}
                 key={property.id}
@@ -123,10 +166,7 @@ const PropertiesPage = () => {
                   </div>
                   <div className="absolute bottom-4 right-4 bg-brand-dark/80 backdrop-blur-md text-white px-4 py-2 rounded-xl font-black">
                     {property.price}
-                    <span className="text-[10px] opacity-70">
-                      {" "}
-                      {property.category === "Shortlet" ? "/night" : "/yr"}
-                    </span>
+                    <span className="text-[10px] opacity-70"> </span>
                   </div>
                 </div>
 

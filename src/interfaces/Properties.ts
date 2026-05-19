@@ -1,8 +1,4 @@
-export type PropertyCategory =
-  | "Apartment"
-  | "Shortlet"
-  | "Commercial"
-  | "Full House";
+export type PropertyCategory = "Apartment" | "House" | "Shop" | "Land";
 export type PropertyType = "Premium" | "Executive" | "Standard";
 export type PropertyStatus = "Available" | "Occupied";
 export interface Property {
