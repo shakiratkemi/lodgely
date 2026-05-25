@@ -50,27 +50,28 @@ const LandingPage = () => {
   }, []);
 
   const renderPrice = (property: Property) => {
-    if (property.price) return property.price;
-    if (property.price) {
-      return new Intl.NumberFormat("en-NG", {
-        style: "currency",
-        currency: "NGN",
-        maximumFractionDigits: 0,
-      }).format(Number(property.price));
-    }
-    return "Contact for Price";
+    if (!property.rentAmount) return "Contact for Price";
+
+    const parsedPrice = Number(property.rentAmount);
+    if (isNaN(parsedPrice)) return property.rentAmount;
+
+    return new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
+      maximumFractionDigits: 0,
+    }).format(parsedPrice);
   };
 
   return (
-    <div className="min-h-[70vh] lg:h-[80vh] max-w-xl bg-white">
+    <div className="min-h-screen  bg-white">
       <header className="bg-[url('/assets/lodgely.png')]  h-160 bg-cover bg-center flex items-center px-8">
-        <div className="lg:max-w-100 bg-brand-dark/20 glass-effect p-12 rounded-4xl border border-white/20 shadow-2xl ">
+        <div className="w-full max-w-lg bg-brand-dark/20 glass-effect p-6 sm:p-8 md:p-12  md:rounded-4xl rounded-4xl border border-white/20 shadow-2xl ">
           <h1 className="text-4xl md:text-5xl font-extrabold text-brand-white leading-tight">
             Manage Properties, Tenants & Rent –
             <span className="text-[#ffdada]"> All in One Place</span>
           </h1>
 
-          <p className="mt-4 text-brand-white">
+          <p className="mt-4 text-sm sm:text-base text-brand-white font-medium drop-shadow-sm">
             A simple platform for landlords and tenants to manage rentals, track
             payments, and stay organized without stress.
           </p>
@@ -276,7 +277,7 @@ const LandingPage = () => {
 
       <section className="py-24 bg-brand-dark text-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-8">
-          <div className="flex justify-between items-end mb-12">
+          <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-4 mb-8 md:mb-12">
             <div className="">
               <div>
                 <h2 className="text-4xl font-heading font-extrabold">
@@ -289,7 +290,7 @@ const LandingPage = () => {
             </div>
             <Link
               to="/properties"
-              className=" md:block border border-white/20 px-6 py-2 rounded-full hover:bg-white hover:text-brand-dark transition-all font-bold"
+              className="w-full sm:w-auto text-center border border-white/20 px-6 py-2 rounded-full hover:bg-white hover:text-brand-dark transition-all font-bold text-sm md:text-base"
             >
               View All
             </Link>
@@ -304,7 +305,7 @@ const LandingPage = () => {
                 >
                   <div className="relative h-64 overflow-hidden">
                     <img
-                      src={property.images[0]}
+                      src={property.primaryImageUrl}
                       alt={property.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
@@ -312,7 +313,7 @@ const LandingPage = () => {
                       {property.category}
                     </div>
                     <div className="absolute bottom-4 right-4 bg-brand-dark/80 backdrop-blur-md text-white px-4 py-2 rounded-xl font-black">
-                      {property.price}
+                      ₦{property.rentAmount}
                       <span className="text-[10px] opacity-70"> </span>
                     </div>
                   </div>

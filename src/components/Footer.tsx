@@ -1,6 +1,6 @@
 import { Building } from "lucide-react";
 import { FaGithub, FaInstagram, FaTwitter } from "react-icons/fa";
-
+import { Link } from "react-router";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -30,28 +30,28 @@ const Footer = () => {
           </h4>
           <ul className="space-y-2 text-sm text-brand-dark/70 font-body">
             <li>
-              <a
-                href="#"
+              <Link
+                to="./properties"
                 className="hover:text-brand-primary transition-colors"
               >
                 Find a Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
+              <Link
+                to="./properties"
                 className="hover:text-brand-primary transition-colors"
               >
                 List Property
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
+              <Link
+                to="./"
                 className="hover:text-brand-primary transition-colors"
               >
                 How it Works
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -60,32 +60,28 @@ const Footer = () => {
           <h4 className="font-heading font-bold text-brand-dark mb-4">
             Company
           </h4>
-          <ul className="space-y-2 text-sm text-brand-dark/70 font-body">
-            <li>
-              <a
-                href="#"
-                className="hover:text-brand-primary transition-colors"
-              >
-                About Us
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="hover:text-brand-primary transition-colors"
-              >
-                Privacy Policy
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="hover:text-brand-primary transition-colors"
-              >
-                Contact Support
-              </a>
-            </li>
-          </ul>
+          <div className="flex flex-col space-y-2 text-sm text-brand-dark/70 font-body">
+            <Link
+              to="./about"
+              className="hover:text-brand-primary transition-colors"
+            >
+              About Us
+            </Link>
+
+            <Link
+              to="./privacy-policy"
+              className="hover:text-brand-primary transition-colors"
+            >
+              Privacy Policy
+            </Link>
+
+            <Link
+              to="./contact"
+              className="hover:text-brand-primary transition-colors"
+            >
+              Contact Support
+            </Link>
+          </div>
         </div>
 
         {/* Socials */}

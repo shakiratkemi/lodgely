@@ -25,7 +25,6 @@ const PropertiesPage = () => {
         setLoading(true);
         setError(null);
 
-        // Prepare the query parameters for the API
         const params: Record<string, string> = {};
         if (selectedCategory !== "All") {
           params.category = selectedCategory;
@@ -139,9 +138,9 @@ const PropertiesPage = () => {
                 key={property.id}
                 className="group bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
               >
-                <div className="relative h-64 overflow-hidden">
+                <div className="relative h-64 overflow-hidden ">
                   <img
-                    src={property.images[0]}
+                    src={property.primaryImageUrl}
                     alt={property.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
@@ -165,7 +164,7 @@ const PropertiesPage = () => {
                     {property.category}
                   </div>
                   <div className="absolute bottom-4 right-4 bg-brand-dark/80 backdrop-blur-md text-white px-4 py-2 rounded-xl font-black">
-                    {property.price}
+                    ₦{property.rentAmount}
                     <span className="text-[10px] opacity-70"> </span>
                   </div>
                 </div>

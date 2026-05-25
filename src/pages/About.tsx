@@ -6,12 +6,12 @@ const About = () => {
   const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-white font-body">
-      <section className="bg-brand-light/10 p-5 grid md:grid-cols-2 gap-20 items-center">
-        <div className="w-xl">
+      <section className="bg-brand-light/10 p-6 md:p-16 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center overflow-hidden">
+        <div className="w-full max-w-xl mx-auto text-center md:text-left">
           <h6 className="text-brand-primary font-extrabold text-left">
             EST 2026
           </h6>
-          <h1 className="text-5xl md:text-7xl font-heading font-extrabold mb-8">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-heading font-extrabold mb-6 leading-tight">
             Redefining what it
             <span className="text-brand-primary"> means to be home.</span>
           </h1>
@@ -23,12 +23,11 @@ const About = () => {
             landmark properties, discerning landlords, and modern tenants.
           </p>
         </div>
-        <div className="w-4xl">
+        <div className="w-full max-w-md md:max-w-4xl mx-auto px-4 md:px-0">
           <img
             src="/assets/lodgely3.png"
             alt="Modern Duplex"
-            className="  ease-out hover:scale-110
-          rounded-xl overflow-hidden shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-700"
+            className="w-full h-auto rounded-2xl shadow-2xl transform rotate-1 md:rotate-2 hover:rotate-0 scale-95 sm:scale-100 hover:scale-105 transition-all duration-700 ease-out"
           />
         </div>
       </section>
@@ -57,7 +56,7 @@ const About = () => {
         </div>
 
         <div className="relative group">
-          <div className=" bg-slate-100 rounded-[3rem] overflow-hidden shadow-2xl max-w-lg ml-auto transform transition-all duration-500 ease-out group-hover:-translate-y-2 group-hover:shadow-3xl">
+          <div className="bg-slate-100 rounded-4xl md:rounded-[3rem] overflow-hidden shadow-2xl max-w-lg mx-auto lg:ml-auto transform transition-all duration-500 ease-out group-hover:-translate-y-2 group-hover:shadow-3xl">
             <div className="relative aspect-4/3 ">
               {" "}
               <img
@@ -67,9 +66,9 @@ const About = () => {
               />
             </div>
           </div>
-          <div className="absolute -bottom-10 -right-10 bg-brand-primary p-8 rounded-3xl text-white shadow-xl hidden lg:block">
-            <p className="text-4xl font-black mb-1">98%</p>
-            <p className="text-sm font-bold opacity-80 uppercase tracking-widest">
+          <div className="mt-6 mx-auto max-w-xs text-center lg:text-left lg:mt-0 lg:absolute lg:-bottom-10 lg:-right-10 bg-brand-primary p-6 md:p-8 rounded-2xl md:rounded-3xl text-white shadow-xl">
+            <p className="text-3xl md:text-4xl font-black mb-1">98%</p>
+            <p className="text-xs md:text-sm font-bold opacity-80 uppercase tracking-widest">
               Trust Rating
             </p>
           </div>
@@ -119,21 +118,21 @@ const About = () => {
           invests 5% of all service fees into local neighborhood development
           projects and affordable housing initiatives.
         </p>
-        <div className="flex justify-center gap-12">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 text-center md:text-left">
           <div>
             <p className="text-3xl font-black text-brand-primary">15+</p>
             <p className="text-xs text-brand-light font-bold uppercase tracking-widest mt-1">
               Cities Covered
             </p>
           </div>
-          <div className="w-px h-12 bg-slate-200"></div>
+          <div className="w-24 h-px md:w-px md:h-12 bg-slate-200"></div>
           <div>
             <p className="text-3xl font-black text-brand-dark">2.4k</p>
             <p className="text-xs text-brand-light font-bold uppercase tracking-widest mt-1">
               Happy Tenants
             </p>
           </div>
-          <div className="w-px h-12 bg-slate-200"></div>
+          <div className="w-24 h-px md:w-px md:h-12 bg-slate-200"></div>
           <div>
             <p className="text-3xl font-black text-brand-secondary">0</p>
             <p className="text-xs text-brand-light font-bold uppercase tracking-widest mt-1">
@@ -164,7 +163,10 @@ const About = () => {
             Create Free Account
           </button>
 
-          <button className="border border-gray-600 px-6 py-3 shadow-md rounded-lg transition-transform duration-300 ease-in-out hover:scale-110">
+          <button
+            onClick={() => navigate("/properties")}
+            className="border border-gray-600 px-6 py-3 shadow-md rounded-lg transition-transform duration-300 ease-in-out hover:scale-110"
+          >
             Browse Listings
           </button>
         </div>
