@@ -30,8 +30,21 @@ const TenantLayout = () => {
   useEffect(() => {
     checkUnreadNotifications();
   }, [pathname]);
-  const userString = localStorage.getItem("user");
-  const user = userString ? JSON.parse(userString) : null;
+
+  const getUser = ()=> {
+    try {
+      const userString = localStorage.getItem("user");
+      if (!userString || userString === "undefined" || userString === "null") {
+        return null;
+      }
+      return JSON.parse(userString);
+    } catch (err) {
+      console.error("Could not parse user data", err);
+      return null;
+    }
+
+  };
+  const user = getUser();
 
   const getInitials = () => {
     if (!user) return "U";
