@@ -79,7 +79,8 @@ const getUser = () => {
 export const AppRouter = () => {
   const user = getUser();
   const isAdmin =
-    user && (String(user.role).toLowerCase() === "admin" || user.role === 0);
+    user &&
+    (String(user.role).toLowerCase() === "admin" || String(user.role) === "0");
   return (
     <BrowserRouter>
       <AppLayout>

@@ -96,7 +96,7 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
         setSuccess("Account created successfully 🎉");
 
         setTimeout(() => {
-          handleRoles(res.user.role);
+          handleRoles(user.role);
         }, 800);
       } else {
         const res = await loginUser({
