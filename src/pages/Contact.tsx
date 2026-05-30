@@ -17,7 +17,7 @@ const Contact = () => {
           <h1 className="text-5xl md:text-7xl font-heading font-extrabold text-brand-primary mb-6">
             Get in Touch
           </h1>
-          <div className="w-4xlPPPPPPPPPPPPNN IM bg-brand-dark/20 glass-effect p-12 rounded-4xl border border-white/20 shadow-2xl ">
+          <div className="w-4xl bg-brand-dark/20 glass-effect p-12 rounded-4xl border border-white/20 shadow-2xl ">
             <p className="text-lg md:text-xl text-[#f9dada] font-bold leading-relaxed ">
               Whether you're looking for your dream home or listing a premium
               property, our executive team is ready to assist you.

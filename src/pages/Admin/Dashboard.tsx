@@ -144,7 +144,7 @@ const AdminDashboard = () => {
               Recent Onboarding
             </h2>
             <button
-              onClick={() => navigate("/admin/userManagement")}
+              onClick={() => navigate("/admin/users")}
               className="text-xs font-black text-brand-primary hover:underline flex items-center gap-1 uppercase"
             >
               View All <ExternalLink size={14} />

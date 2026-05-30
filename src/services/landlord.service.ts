@@ -12,9 +12,7 @@ export const getMyProperties = async () => {
 };
 
 export const addNewProperty = async (formData: FormData) => {
-  const res = await api.post("/Properties", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const res = await api.post("/Properties", formData);
   return res.data;
 };
 export const updateProperty = async (id: string, updateData: any) => {
