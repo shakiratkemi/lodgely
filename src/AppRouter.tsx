@@ -63,9 +63,21 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+const getUser = () => {
+  try {
+    const userString = localStorage.getItem("user");
+    if (!userString || userString === "undefined" || userString === "null") {
+      return null;
+    }
+    return JSON.parse(userString);
+  } catch (err) {
+    console.error("Could not parse user data", err);
+    return null;
+  }
+};
+
 export const AppRouter = () => {
-  const userString = localStorage.getItem("user");
-  const user = userString ? JSON.parse(userString) : null;
+  const user = getUser();
   const isAdmin =
     user && (String(user.role).toLowerCase() === "admin" || user.role === 0);
   return (
