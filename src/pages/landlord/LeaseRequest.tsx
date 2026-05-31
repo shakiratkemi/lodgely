@@ -20,6 +20,7 @@ const LandlordLeaseRequests = () => {
       setLoading(true);
       const res = await getPendingLeaseRequests();
       const actualRequests = res?.data?.data || res?.data || res || [];
+      console.log("Inspecting Loaded Lease Requests Payload:", actualRequests);
       setRequests(Array.isArray(actualRequests) ? actualRequests : []);
     } catch (err) {
       console.error(err);
@@ -72,7 +73,7 @@ const LandlordLeaseRequests = () => {
   if (loading)
     return (
       <div className="flex justify-center items-center h-[50vh]">
-        <AiOutlineLoading3Quarters className="animate-spin text-brand-primary w-8 h-8" />
+        <AiOutlineLoading3Quarters className="animate-spin text-brand-secondary w-8 h-8" />
       </div>
     );
 
@@ -102,23 +103,25 @@ const LandlordLeaseRequests = () => {
               <div className="space-y-4 flex-1">
                 <div className="flex items-center gap-2 text-brand-primary font-bold text-sm uppercase tracking-wider">
                   <Building size={16} />
-                  {req.propertyTitle}
+                  {req.propertyTitle || "Unknown Property"}
                 </div>
 
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center font-bold text-slate-400">
-                    {req.tenantName.charAt(0)}
+                    {req.tenantName
+                      ? req.tenantName.charAt(0).toUpperCase()
+                      : "?"}
                   </div>
                   <div>
                     <h3 className="font-bold text-lg text-brand-dark">
-                      {req.tenantName}
+                      {req.tenantName || "Unknown Tenant"}
                     </h3>
                     <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500 mt-1">
                       <span className="flex items-center gap-1">
-                        <Mail size={14} /> {req.tenantEmail}
+                        <Mail size={14} /> {req.tenantEmail || "N/A"}
                       </span>
                       <span className="flex items-center gap-1">
-                        <Phone size={14} /> {req.tenantPhone}
+                        <Phone size={14} /> {req.tenantPhone || "N/A"}
                       </span>
                     </div>
                   </div>
@@ -132,14 +135,14 @@ const LandlordLeaseRequests = () => {
               <div className="flex md:flex-col justify-center gap-3 shrink-0">
                 <button
                   disabled={processingId === req.id}
-                  onClick={() => handleAction(req.id, "approve")}
+                  onClick={() => handleApproveClick(req)}
                   className="bg-green-600 text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-green-700 transition-all disabled:opacity-50"
                 >
                   <Check size={18} /> Approve
                 </button>
                 <button
                   disabled={processingId === req.id}
-                  onClick={() => handleAction(req.id, "reject")}
+                  onClick={() => handleReject(req.id)}
                   className="bg-white text-red-600 border border-red-100 px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-red-50 transition-all disabled:opacity-50"
                 >
                   <X size={18} /> Reject
@@ -151,7 +154,10 @@ const LandlordLeaseRequests = () => {
       )}
       <CreateLeaseModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedRequest(null);
+        }}
         requestData={selectedRequest}
         onSuccess={() => {
           setIsModalOpen(false);
