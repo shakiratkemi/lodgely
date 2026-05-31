@@ -1,6 +1,9 @@
 import type { ILandlordProps } from "../../interfaces";
 import { useEffect, useState } from "react";
-import { getLandlordDashboard } from "../../services/landlord.service";
+import {
+  getLandlordDashboard,
+  getPendingLeaseRequests,
+} from "../../services/landlord.service";
 import { ValueCard } from "../../components";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import {
@@ -10,17 +13,32 @@ import {
   Clock,
   Wallet,
   AlertCircle,
+  MessageSquare,
 } from "lucide-react";
 
 const LandlordDashboard = () => {
   const [data, setData] = useState<ILandlordProps | null>(null);
+  const [pendingRequestCount, setPendingRequestCount] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const fetchDashboard = async () => {
     try {
       setLoading(true);
-      const res = await getLandlordDashboard();
-      setData(res);
+      const [dashboardRes, pendingRequestsRes] = await Promise.all([
+        getLandlordDashboard(),
+        getPendingLeaseRequests(),
+      ]);
+
+      setData(dashboardRes);
+
+      const pendingRequests =
+        pendingRequestsRes?.data?.data ||
+        pendingRequestsRes?.data ||
+        pendingRequestsRes ||
+        [];
+      setPendingRequestCount(
+        Array.isArray(pendingRequests) ? pendingRequests.length : 0,
+      );
     } catch (err) {
       console.error("Dashboard Fetch Error:", err);
     } finally {
@@ -81,6 +99,11 @@ const LandlordDashboard = () => {
             title="Pending Approval"
             value={data?.pendingApprovalProperties ?? 0}
             icon={<Clock size={20} className="text-purple-600" />}
+          />
+          <ValueCard
+            title="Pending Requests"
+            value={pendingRequestCount}
+            icon={<MessageSquare size={20} className="text-brand-primary" />}
           />
         </div>
       </section>

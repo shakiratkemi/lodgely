@@ -9,7 +9,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { CreateLeaseModal } from "../../components";
 
 const LandlordLeaseRequests = () => {
-  const [requests, setRequests] = useState([]);
+  const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
@@ -19,7 +19,8 @@ const LandlordLeaseRequests = () => {
     try {
       setLoading(true);
       const res = await getPendingLeaseRequests();
-      setRequests(res.data || []);
+      const actualRequests = res?.data?.data || res?.data || res || [];
+      setRequests(Array.isArray(actualRequests) ? actualRequests : []);
     } catch (err) {
       console.error(err);
     } finally {
