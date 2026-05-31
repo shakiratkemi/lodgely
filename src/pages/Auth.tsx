@@ -114,6 +114,7 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
         setSuccess("Login successful 🎉");
+        setLoading(false);
 
         setTimeout(() => {
           handleRoles(user.role);
