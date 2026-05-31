@@ -26,17 +26,17 @@ export const deleteProperty = async (id: string) => {
 };
 
 export const getPendingLeaseRequests = async () => {
-  const res = await api.get("/LeaseRequests/pending");
+  const res = await api.get("/lease-requests/pending");
   return res.data;
 };
 
 export const approveLeaseRequest = async (id: string) => {
-  const res = await api.post(`/LeaseRequests/${id}/approve`, {});
+  const res = await api.post(`/lease-requests/${id}/approve`, {});
   return res.data;
 };
 
 export const rejectLeaseRequest = async (id: string, reason: string) => {
-  const res = await api.post(`/LeaseRequests/${id}/reject`, { reason });
+  const res = await api.post(`/lease-requests/${id}/reject`, { reason });
   return res.data;
 };
 
