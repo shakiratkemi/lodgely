@@ -24,12 +24,14 @@ const LandlordDashboard = () => {
   const fetchDashboard = async () => {
     try {
       setLoading(true);
-      const [dashboardRes, pendingRequestsRes] = await Promise.all([
+      const [dashboardRes, pendingRequestsRes] = await Promise.all<any>([
         getLandlordDashboard(),
         getPendingLeaseRequests(),
       ]);
+      const actualDashboardData =
+        dashboardRes?.data?.data || dashboardRes?.data || dashboardRes;
 
-      setData(dashboardRes);
+      setData(actualDashboardData);
 
       const pendingRequests =
         pendingRequestsRes?.data?.data ||

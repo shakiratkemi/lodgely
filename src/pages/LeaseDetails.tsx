@@ -20,8 +20,10 @@ const LeaseDetails = () => {
   useEffect(() => {
     const fetchLease = async () => {
       try {
-        const res = await getLeaseById(id!);
-        setLease(res.data || res);
+        const res: any = await getLeaseById(id!);
+        const actualLease = res?.data?.data || res?.data || res;
+        console.log("Inspecting Full Loaded Lease Object:", actualLease);
+        setLease(actualLease);
       } catch (err) {
         console.error("Error loading lease details", err);
       } finally {
@@ -56,7 +58,14 @@ const LeaseDetails = () => {
       </div>
     );
   if (!lease) return <div className="p-20 text-center">Lease not found.</div>;
-
+  const schedulesList = lease.schedules || lease.Schedules || [];
+  const displayRent = lease.rentAmount ?? lease.RentAmount ?? 0;
+  const displayStatus = lease.status ?? lease.Status ?? "Unknown";
+  const displayTitle =
+    lease.propertyTitle ??
+    lease.property?.title ??
+    lease.PropertyTitle ??
+    "Property Lease";
   return (
     <div className="max-w-4xl mx-auto py-10 px-6">
       <button
@@ -68,9 +77,7 @@ const LeaseDetails = () => {
 
       <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
         <div className="bg-brand-dark p-8 text-white">
-          <h1 className="text-2xl font-black">
-            {lease.propertyTitle || "Property Lease"}
-          </h1>
+          <h1 className="text-2xl font-black">{displayTitle}</h1>
           <p className="text-slate-400 text-sm mt-1">Lease Reference: {id}</p>
         </div>
 
@@ -82,7 +89,7 @@ const LeaseDetails = () => {
                 Monthly Rent
               </p>
               <p className="font-bold text-brand-dark">
-                ₦{lease.rentAmount?.toLocaleString()}
+                ₦{displayRent?.toLocaleString()}
               </p>
             </div>
             <div>
@@ -90,12 +97,11 @@ const LeaseDetails = () => {
                 Status
               </p>
               <span className="text-green-600 font-bold text-sm">
-                {lease.status}
+                {displayStatus}
               </span>
             </div>
           </div>
 
-          {/* Payment Schedule Table */}
           <div>
             <h3 className="font-black text-brand-dark mb-4 flex items-center gap-2">
               <Calendar size={18} /> Payment Schedule
@@ -112,47 +118,67 @@ const LeaseDetails = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y">
-                  {/* Assuming lease.schedules is returned by GET /Leases/{id} */}
-                  {lease.schedules?.map((item: any, idx: number) => (
-                    <tr key={item.id} className="text-sm">
-                      <td className="px-6 py-4 font-bold text-slate-500">
-                        #{idx + 1}
-                      </td>
-                      <td className="px-6 py-4">
-                        {new Date(item.dueDate).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 font-bold">
-                        ₦{item.amountDue?.toLocaleString()}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase ${
-                            item.status === "Paid"
-                              ? "bg-green-100 text-green-700"
-                              : "bg-amber-100 text-amber-700"
-                          }`}
-                        >
-                          {item.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        {item.status !== "Paid" && (
-                          <button
-                            disabled={payingId === item.id}
-                            onClick={() => handlePayment(item.id)}
-                            className="bg-brand-primary text-white text-[10px] font-black px-4 py-2 rounded-xl"
-                          >
-                            {payingId === item.id ? (
-                              <AiOutlineLoading3Quarters className="animate-spin" />
-                            ) : (
-                              <CreditCard size={14} />
-                            )}
-                            PAY NOW
-                          </button>
-                        )}
+                  {schedulesList.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={5}
+                        className="text-center py-10 text-slate-400 font-medium"
+                      >
+                        No payment installments scheduled for this lease
+                        agreement.
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    schedulesList.map((item: any, idx: number) => {
+                      const itemStatus = item.status ?? item.Status ?? "Unpaid";
+                      const isPaid = itemStatus.toLowerCase() === "paid";
+                      const itemAmount =
+                        item.amountDue ?? item.amount ?? item.AmountDue ?? 0;
+                      const itemDueDate = item.dueDate ?? item.DueDate;
+                      return (
+                        <tr key={item.id} className="text-sm">
+                          <td className="px-6 py-4 font-bold text-slate-500">
+                            #{idx + 1}
+                          </td>
+                          <td className="px-6 py-4">
+                            {itemDueDate
+                              ? new Date(itemDueDate).toLocaleDateString()
+                              : "N/A"}
+                          </td>
+                          <td className="px-6 py-4 font-bold">
+                            ₦{itemAmount?.toLocaleString()}
+                          </td>
+                          <td className="px-6 py-4">
+                            <span
+                              className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase ${
+                                isPaid
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-amber-100 text-amber-700"
+                              }`}
+                            >
+                              {itemStatus}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            {item.status !== "Paid" && (
+                              <button
+                                disabled={payingId === item.id}
+                                onClick={() => handlePayment(item.id)}
+                                className="bg-brand-primary text-white text-[10px] font-black px-4 py-2 rounded-xl"
+                              >
+                                {payingId === item.id ? (
+                                  <AiOutlineLoading3Quarters className="animate-spin" />
+                                ) : (
+                                  <CreditCard size={14} />
+                                )}
+                                PAY NOW
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
                 </tbody>
               </table>
             </div>

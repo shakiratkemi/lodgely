@@ -95,61 +95,79 @@ const LandlordLeaseRequests = () => {
         </div>
       ) : (
         <div className="grid gap-4">
-          {requests.map((req: any) => (
-            <div
-              key={req.id}
-              className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex flex-col md:flex-row justify-between gap-6 hover:border-brand-primary/30 transition-colors"
-            >
-              <div className="space-y-4 flex-1">
-                <div className="flex items-center gap-2 text-brand-primary font-bold text-sm uppercase tracking-wider">
-                  <Building size={16} />
-                  {req.propertyTitle || "Unknown Property"}
-                </div>
+          {requests.map((req: any) => {
+            const status = req.status?.toLowerCase() || "pending";
 
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center font-bold text-slate-400">
-                    {req.tenantName
-                      ? req.tenantName.charAt(0).toUpperCase()
-                      : "?"}
+            return (
+              <div
+                key={req.id}
+                className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex flex-col md:flex-row justify-between gap-6 hover:border-brand-primary/30 transition-colors"
+              >
+                <div className="space-y-4 flex-1">
+                  <div className="flex items-center gap-2 text-brand-primary font-bold text-sm uppercase tracking-wider">
+                    <Building size={16} />
+                    {req.propertyTitle || "Unknown Property"}
                   </div>
-                  <div>
-                    <h3 className="font-bold text-lg text-brand-dark">
-                      {req.tenantName || "Unknown Tenant"}
-                    </h3>
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500 mt-1">
-                      <span className="flex items-center gap-1">
-                        <Mail size={14} /> {req.tenantEmail || "N/A"}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Phone size={14} /> {req.tenantPhone || "N/A"}
-                      </span>
+
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center font-bold text-slate-400">
+                      {req.tenantName
+                        ? req.tenantName.charAt(0).toUpperCase()
+                        : "?"}
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg text-brand-dark">
+                        {req.tenantName || "Unknown Tenant"}
+                      </h3>
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500 mt-1">
+                        <span className="flex items-center gap-1">
+                          <Mail size={14} /> {req.tenantEmail || "N/A"}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Phone size={14} /> {req.tenantPhone || "N/A"}
+                        </span>
+                      </div>
                     </div>
                   </div>
+
+                  <div className="bg-slate-50 p-4 rounded-xl text-sm text-slate-600 italic border-l-4 border-slate-200">
+                    "{req.message || "No message provided."}"
+                  </div>
                 </div>
 
-                <div className="bg-slate-50 p-4 rounded-xl text-sm text-slate-600 italic border-l-4 border-slate-200">
-                  "{req.message || "No message provided."}"
+                <div className="flex md:flex-col justify-center gap-3 shrink-0">
+                  {status === "pending" ? (
+                    <>
+                      <button
+                        disabled={processingId === req.id}
+                        onClick={() => handleApproveClick(req)}
+                        className="bg-green-600 text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-green-700 transition-all disabled:opacity-50"
+                      >
+                        <Check size={18} /> Approve
+                      </button>
+                      <button
+                        disabled={processingId === req.id}
+                        onClick={() => handleReject(req.id)}
+                        className="bg-white text-red-600 border border-red-100 px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-red-50 transition-all disabled:opacity-50"
+                      >
+                        <X size={18} /> Reject
+                      </button>
+                    </>
+                  ) : status === "approved" ? (
+                    <span className="bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-xl text-sm font-bold uppercase tracking-wide flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-green-500" />
+                      Approved
+                    </span>
+                  ) : (
+                    <span className="bg-red-50 text-red-700 border border-red-200 px-4 py-2 rounded-xl text-sm font-bold uppercase tracking-wide flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-red-500" />
+                      Rejected
+                    </span>
+                  )}
                 </div>
               </div>
-
-              <div className="flex md:flex-col justify-center gap-3 shrink-0">
-                <button
-                  disabled={processingId === req.id}
-                  onClick={() => handleApproveClick(req)}
-                  className="bg-green-600 text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-green-700 transition-all disabled:opacity-50"
-                >
-                  <Check size={18} /> Approve
-                </button>
-                <button
-                  disabled={processingId === req.id}
-                  onClick={() => handleReject(req.id)}
-                  className="bg-white text-red-600 border border-red-100 px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-red-50 transition-all disabled:opacity-50"
-                >
-                  <X size={18} /> Reject
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
       <CreateLeaseModal

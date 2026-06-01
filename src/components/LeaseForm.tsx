@@ -32,8 +32,8 @@ const CreateLeaseModal = ({
       await createLease({
         propertyId: requestData.propertyId,
         tenantId: requestData.tenantId,
-        startDate: form.startDate,
-        endDate: form.endDate,
+        startDate: new Date(form.startDate).toISOString(),
+        endDate: new Date(form.endDate).toISOString(),
         rentAmount: Number(form.rentAmount),
       });
       onSuccess();

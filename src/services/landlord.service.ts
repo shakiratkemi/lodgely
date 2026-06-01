@@ -27,6 +27,7 @@ export const deleteProperty = async (id: string) => {
 
 export const getPendingLeaseRequests = async () => {
   const res = await api.get("/lease-requests/pending");
+  console.log("Pending Lease Requests Response:", res);
   return res.data;
 };
 
@@ -48,6 +49,7 @@ export const createLease = async (leaseData: {
   rentAmount: number;
 }) => {
   const res = await api.post("/Leases", leaseData);
+  console.log("Create Lease Response:", res);
   return res.data;
 };
 

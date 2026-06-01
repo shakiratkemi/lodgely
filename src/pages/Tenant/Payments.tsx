@@ -13,14 +13,16 @@ import {
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const TenantPayments = () => {
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchHistory, setSearchHistory] = useState("");
 
   useEffect(() => {
     const fetchPaymentData = async () => {
       try {
         const res = await getMyPaymentHistory();
-        setHistory(res.data || res);
+        const actualHistory = res?.data?.data || res?.data || res || [];
+        setHistory(Array.isArray(actualHistory) ? actualHistory : []);
       } catch (err) {
         console.error("Error loading payment history:", err);
       } finally {
@@ -29,6 +31,23 @@ const TenantPayments = () => {
     };
     fetchPaymentData();
   }, []);
+  // Total Spent: Sum of all Confirmed payments in the history
+  const totalSpent = history
+    .filter((trx) => trx.status === "Confirmed")
+    .reduce((sum, trx) => sum + (trx.amount || 0), 0);
+
+  //  Awaiting Confirmation: Sum of all Pending payments
+  const awaitingConfirmation = history
+    .filter((trx) => trx.status === "Pending")
+    .reduce((sum, trx) => sum + (trx.amount || 0), 0);
+
+  //  Last Payment: The amount of the newest transaction in the array
+  const lastPaymentAmount = history.length > 0 ? history[0].amount || 0 : 0;
+
+  // Search Filter Logic
+  const filteredHistory = history.filter((trx) =>
+    trx.paymentReference?.toLowerCase().includes(searchHistory.toLowerCase()),
+  );
 
   const getStatus = (status: string) => {
     const styles = {
@@ -77,7 +96,9 @@ const TenantPayments = () => {
             <p className="text-[10px] font-black text-slate-400 uppercase">
               Total Spent
             </p>
-            <p className="text-xl font-black text-brand-dark">₦2,400,000</p>
+            <p className="text-xl font-black text-brand-dark">
+              ₦{totalSpent.toLocaleString()}
+            </p>
           </div>
         </div>
       </header>
@@ -88,12 +109,14 @@ const TenantPayments = () => {
           <div>
             <Wallet className="mb-4 opacity-50" />
             <p className="text-slate-400 text-xs font-bold uppercase">
-              Balance Due
+              Total Spent
             </p>
-            <h3 className="text-3xl font-black mt-1">₦0.00</h3>
+            <h3 className="text-3xl font-black mt-1">
+              ₦{totalSpent.toLocaleString()}
+            </h3>
           </div>
           <span className="bg-green-500/20 text-green-400 text-[10px] font-black px-2 py-1 rounded">
-            CLEAR
+            LIVE
           </span>
         </div>
 
@@ -102,7 +125,9 @@ const TenantPayments = () => {
           <p className="text-slate-400 text-xs font-bold uppercase">
             Awaiting Confirmation
           </p>
-          <h3 className="text-3xl font-black mt-1 text-brand-dark">₦150,000</h3>
+          <h3 className="text-3xl font-black mt-1 text-brand-dark">
+            ₦{awaitingConfirmation.toLocaleString()}
+          </h3>
         </div>
 
         <div className="bg-brand-primary p-8 rounded-[2.5rem] text-white">
@@ -110,7 +135,9 @@ const TenantPayments = () => {
           <p className="text-white/60 text-xs font-bold uppercase">
             Last Payment
           </p>
-          <h3 className="text-3xl font-black mt-1 text-white">₦150,000</h3>
+          <h3 className="text-3xl font-black mt-1 text-white">
+            ₦{lastPaymentAmount.toLocaleString()}
+          </h3>
         </div>
       </div>
 
@@ -126,6 +153,8 @@ const TenantPayments = () => {
               />
               <input
                 type="text"
+                value={searchHistory}
+                onChange={(e) => setSearchHistory(e.target.value)}
                 placeholder="Search ref..."
                 className="pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 ring-brand-primary/20"
               />
@@ -145,17 +174,19 @@ const TenantPayments = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {history.length > 0 ? (
-                history.map((trx: any) => (
+              {filteredHistory.length > 0 ? (
+                filteredHistory.map((trx: any) => (
                   <tr
                     key={trx.id}
                     className="hover:bg-slate-50/50 transition-colors group"
                   >
                     <td className="px-8 py-6 text-sm text-slate-600 font-medium">
-                      {new Date(trx.createdAt).toLocaleDateString("en-GB")}
+                      {trx.createdAt
+                        ? new Date(trx.createdAt).toLocaleDateString("en-GB")
+                        : "N/A"}
                     </td>
                     <td className="px-8 py-6 font-mono text-[10px] text-slate-400">
-                      {trx.paymentReference || "N/A"}
+                      {trx.paymentReference || trx.reference || "N/A"}
                     </td>
                     <td className="px-8 py-6 font-black text-brand-dark">
                       ₦{trx.amount?.toLocaleString()}
@@ -181,7 +212,7 @@ const TenantPayments = () => {
                     colSpan={5}
                     className="p-20 text-center text-slate-400 font-bold italic"
                   >
-                    No transactions found yet.
+                    No transactions found matching your search.
                   </td>
                 </tr>
               )}

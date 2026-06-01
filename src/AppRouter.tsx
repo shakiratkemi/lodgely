@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import {
   BrowserRouter,
   Navigate,
@@ -77,7 +77,23 @@ const getUser = () => {
 };
 
 export const AppRouter = () => {
-  const user = getUser();
+  const [user, setUser] = useState<any>(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    const currentUser = getUser();
+    setUser(currentUser);
+    setCheckingAuth(false);
+  }, []);
+
+  if (checkingAuth) {
+    return (
+      <div className="flex justify-center text-brand-secondary font-extrabold items-center h-screen">
+        <AiOutlineLoading3Quarters className="animate-spin text-brand-secondary w-6 h-6 mr-2" />
+        Verifying Session...
+      </div>
+    );
+  }
   const isAdmin =
     user &&
     (String(user.role).toLowerCase() === "admin" || String(user.role) === "0");
@@ -103,7 +119,9 @@ export const AppRouter = () => {
 
             <Route
               path="/admin"
-              element={isAdmin ? <AdminLayout /> : <Navigate to="/login" />}
+              element={
+                isAdmin ? <AdminLayout /> : <Navigate to="/login" replace />
+              }
             >
               <Route index element={<AdminDashboard />} />
               <Route path="properties" element={<AdminPropertyQueue />} />
@@ -117,6 +135,7 @@ export const AppRouter = () => {
               <Route path="properties" element={<LandlordProperties />} />
               <Route path="leaserequest" element={<LandlordLeaseRequests />} />
               <Route path="leases" element={<LandlordLeases />} />
+              <Route path="leases/:id" element={<LeaseDetailPage />} />
               <Route path="payments" element={<LandlordPayments />} />
               <Route path="notifications" element={<LandlordNotifications />} />
             </Route>
@@ -127,7 +146,7 @@ export const AppRouter = () => {
               <Route path="properties/:id" element={<PropertyDetailPage />} />
               <Route path="requests" element={<TenantRequests />} />
               <Route path="leases" element={<TenantLeases />} />
-              <Route path="lease/:id" element={<LeaseDetailPage />} />
+              <Route path="leases/:id" element={<LeaseDetailPage />} />
               <Route path="payments" element={<TenantPayments />} />
               <Route path="notifications" element={<TenantNotifications />} />
             </Route>

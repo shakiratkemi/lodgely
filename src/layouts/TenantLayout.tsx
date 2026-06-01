@@ -7,6 +7,9 @@ import {
   Wallet,
   Bell,
   LogOut,
+  Building,
+  X,
+  Menu,
 } from "lucide-react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router";
 import { getMyNotifications } from "../services/tenant.service";
@@ -14,13 +17,17 @@ const TenantLayout = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [unreadCount, setUnreadCount] = useState(0);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const checkUnreadNotifications = async () => {
     try {
       const res = await getMyNotifications();
       const list = res.data || res;
       const unreadOnly = list.filter((note: any) => note.isRead === false);
-
+      if (Array.isArray(list)) {
+        const unreadOnly = list.filter((note: any) => note.isRead === false);
+        setUnreadCount(unreadOnly.length);
+      }
       setUnreadCount(unreadOnly.length);
     } catch (err) {
       console.error("Could not fetch notification count", err);
@@ -29,9 +36,10 @@ const TenantLayout = () => {
 
   useEffect(() => {
     checkUnreadNotifications();
+    setIsSidebarOpen(false);
   }, [pathname]);
 
-  const getUser = ()=> {
+  const getUser = () => {
     try {
       const userString = localStorage.getItem("user");
       if (!userString || userString === "undefined" || userString === "null") {
@@ -42,7 +50,6 @@ const TenantLayout = () => {
       console.error("Could not parse user data", err);
       return null;
     }
-
   };
   const user = getUser();
 
@@ -80,9 +87,49 @@ const TenantLayout = () => {
   ];
 
   return (
-    <div className="min-h-screen flex">
-      <aside className="w-64 bg-brand-dark text-white p-6 flex flex-col">
-        <h2 className="text-2xl font-bold mb-10">Tenant</h2>
+    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
+      <header className="md:hidden flex items-center justify-between bg-brand-dark text-white p-4 sticky top-0 z-40 shadow-md">
+        <div className="flex items-center gap-3">
+          <div className="text-brand-primary bg-white/10 p-2 rounded-xl">
+            <Building size={24} strokeWidth={3} />
+          </div>
+          <span className="text-xl font-heading font-extrabold text-white tracking-tight">
+            Lodgely<span className="text-brand-primary">.</span>
+          </span>
+        </div>
+
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="p-2 text-slate-300 hover:text-white transition-colors focus:outline-none"
+          aria-label="Toggle navigation drawer"
+        >
+          {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </header>
+
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity duration-300"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <aside
+        className={`
+        fixed inset-y-0 left-0 w-64 bg-brand-dark text-white p-6 flex flex-col justify-between z-50
+        transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:z-auto
+        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+      `}
+      >
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl font-bold">Tenant</h2>
+          <button
+            onClick={() => setIsSidebarOpen(false)}
+            className="md:hidden p-1 text-slate-400 hover:text-white"
+          >
+            <X size={20} />
+          </button>
+        </div>
 
         <div className="flex flex-col justify-between gap-28 h-full">
           <nav className="space-y-4">
