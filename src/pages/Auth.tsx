@@ -171,8 +171,7 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
             LODGELY<span className="text-brand-primary">.</span>
           </h2>
           <blockquote className="text-2xl text-white/90 font-medium leading-relaxed italic mb-8">
-            "The simplest way to find a verified, executive home in Nigeria's
-            top cities."
+            "The simplest way to find a verified, executive home in Lagos ."
           </blockquote>
         </div>
 

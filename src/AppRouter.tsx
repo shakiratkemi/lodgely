@@ -95,8 +95,9 @@ export const AppRouter = () => {
     );
   }
   const isAdmin =
-    user &&
-    (String(user.role).toLowerCase() === "admin" || String(user.role) === "0");
+    user?.role === 0 ||
+    user?.role === "0" ||
+    String(user?.role).toLowerCase() === "admin";
   return (
     <BrowserRouter>
       <AppLayout>
@@ -150,7 +151,7 @@ export const AppRouter = () => {
               <Route path="payments" element={<TenantPayments />} />
               <Route path="notifications" element={<TenantNotifications />} />
             </Route>
-          </Routes> 
+          </Routes>
         </Suspense>
       </AppLayout>
     </BrowserRouter>
