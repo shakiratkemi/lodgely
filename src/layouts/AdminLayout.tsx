@@ -9,7 +9,7 @@ import {
   X,
   Settings,
 } from "lucide-react";
-import { Link, Outlet, useLocation, useNavigate } from "react-router";
+import { Link, Navigate, Outlet, useLocation, useNavigate } from "react-router";
 
 const AdminLayout = () => {
   const { pathname } = useLocation();
@@ -34,6 +34,14 @@ const AdminLayout = () => {
       icon: <Bell size={20} />,
     },
   ];
+  const userString = localStorage.getItem("user");
+  const user = userString ? JSON.parse(userString) : null;
+  const userRole = String(user?.role || "").toLowerCase();
+  const isAdmin = userRole === "admin" || userRole === "0";
+
+  if (!isAdmin) {
+    return <Navigate to="/login" replace />;
+  }
 
   const handleLogout = () => {
     localStorage.clear();

@@ -150,7 +150,7 @@ export const AppRouter = () => {
               <Route path="payments" element={<TenantPayments />} />
               <Route path="notifications" element={<TenantNotifications />} />
             </Route>
-          </Routes>
+          </Routes> 
         </Suspense>
       </AppLayout>
     </BrowserRouter>

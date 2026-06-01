@@ -60,16 +60,19 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
       if (type === "signup") {
         if (!form.email || !form.password || !form.role) {
           setError("Fill all required fields");
+          setLoading(false);
           return;
         }
 
         if (!form.confirmPassword) {
           setError("Confirm your password");
+          setLoading(false);
           return;
         }
 
         if (form.password !== form.confirmPassword) {
           setError("Passwords do not match");
+          setLoading(false);
           return;
         }
 
@@ -99,18 +102,42 @@ const AuthPage = ({ type }: { type: "login" | "signup" }) => {
           handleRoles(user.role);
         }, 800);
       } else {
-        const res = await loginUser({
+        const res: any = await loginUser({
           email: form.email,
           password: form.password,
         });
-        const user = res?.data?.user;
-        const token = res?.data?.token;
+
+        // Normalize different API response shapes
+        let user: any = null;
+        let token: any = null;
+
+        if (res) {
+          if (res.data && (res.data.user || res.data.token)) {
+            user =
+              res.data.user ??
+              (typeof res.data === "object" && !res.data.token
+                ? res.data
+                : null);
+            token = res.data.token ?? res.token ?? null;
+          } else if (res.user || res.token) {
+            user = res.user ?? null;
+            token = res.token ?? null;
+          } else if (res.data && !res.data.user && !res.data.token) {
+            user = res.data;
+            token = res.token ?? null;
+          }
+        }
+
+        user = user ?? res?.user ?? res?.data ?? null;
+        token = token ?? res?.token ?? res?.data?.token ?? null;
 
         if (!user || !token) {
+          console.error("Invalid login payload:", res);
           setError("Invalid login response");
           setLoading(false);
           return;
         }
+
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
         setSuccess("Login successful 🎉");
